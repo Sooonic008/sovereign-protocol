@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sovereign Protocol | Digital Empire</title>
     
-    <!-- Scripts & Fonts - Clean Links for GitHub -->
+    <!-- Scripts & Fonts - Clean Links (Wichtig für GitHub Pages) -->
     <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
     <link href="[https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;700;800&display=swap](https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;700;800&display=swap)" rel="stylesheet">
 
@@ -37,31 +37,35 @@
         }
         .btn-gold:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.5);
         }
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            border-radius: 32px;
-            transition: border-color 0.3s ease;
+            backdrop-filter: blur(15px);
+            border-radius: 40px;
+            transition: all 0.4s ease;
         }
         .glass-card:hover {
-            border-color: rgba(212, 175, 55, 0.3);
+            border-color: rgba(212, 175, 55, 0.4);
+            background: rgba(255, 255, 255, 0.05);
         }
         .hero-mesh {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(212, 175, 55, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(212, 175, 55, 0.1) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(212, 175, 55, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(212, 175, 55, 0.15) 0px, transparent 50%);
             pointer-events: none;
             z-index: -1;
         }
         .nav-blur {
-            background: rgba(8, 8, 8, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(8, 8, 8, 0.85);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glow-button {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
         }
     </style>
 </head>
@@ -71,90 +75,108 @@
     <!-- Navigation -->
     <nav class="fixed top-0 w-full z-[100] nav-blur">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-8 py-5">
-            <div class="text-xl font-800 tracking-tighter uppercase">
+            <div class="text-2xl font-800 tracking-tighter uppercase italic">
                 SOV<span class="gold-text">ER</span>EIGN
             </div>
-            <button onclick="scrollToPricing()" class="btn-gold px-6 py-2 rounded-full text-[10px]">Access</button>
+            <button onclick="scrollToPricing()" class="btn-gold px-8 py-2.5 rounded-full text-[11px] glow-button">Imperium Starten</button>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <header class="relative pt-48 pb-32 px-6 text-center overflow-hidden">
+    <header class="relative pt-56 pb-40 px-6 text-center overflow-hidden">
         <div class="max-w-5xl mx-auto">
-            <span class="inline-block py-2 px-4 rounded-full bg-white/5 border border-white/10 text-zinc-400 text-[10px] uppercase tracking-[0.3em] mb-10">
-                The New Standard of Digital Assets
+            <span class="inline-block py-2.5 px-6 rounded-full bg-white/5 border border-white/10 text-zinc-400 text-[10px] uppercase tracking-[0.4em] mb-12">
+                The Gold Standard of Digital Sovereignty
             </span>
-            <h1 class="text-6xl md:text-9xl font-800 tracking-tighter leading-[0.85] mb-10 uppercase italic">
+            <h1 class="text-7xl md:text-[10rem] font-800 tracking-tighter leading-[0.8] mb-12 uppercase italic">
                 Sovereign <br> <span class="gold-text italic">Protocol</span>
             </h1>
-            <p class="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto mb-14 leading-relaxed font-light">
-                Verwandle Expertise in ein unantastbares Imperium. High-Ticket SaaS Lösungen für die neue Elite der digitalen Gründer.
+            <p class="text-zinc-400 text-xl md:text-2xl max-w-3xl mx-auto mb-16 leading-relaxed font-light">
+                Erbaue ein unantastbares Business-Imperium. <br>High-Ticket SaaS Lösungen für die neue Ära digitaler Dominanz.
             </p>
             <div class="flex flex-wrap justify-center gap-6">
-                <button onclick="scrollToPricing()" class="btn-gold px-12 py-5 rounded-2xl text-sm shadow-2xl">
-                    System aktivieren
+                <button onclick="scrollToPricing()" class="btn-gold px-16 py-6 rounded-2xl text-base shadow-2xl scale-110">
+                    System jetzt aktivieren
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Pricing -->
-    <section id="pricing" class="max-w-7xl mx-auto px-6 py-24 relative">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+    <!-- Pricing Section -->
+    <section id="pricing" class="max-w-7xl mx-auto px-6 py-32 relative">
+        <div class="text-center mb-20">
+            <h2 class="text-4xl font-800 uppercase italic mb-4 tracking-tight">Wähle deine <span class="gold-text">Stufe</span></h2>
+            <p class="text-zinc-500 uppercase tracking-widest text-[10px]">Exklusiver Zugang zu proprietärer Technologie</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
             
-            <!-- Elite Card -->
-            <div class="glass-card p-12 flex flex-col relative overflow-hidden group">
-                <div class="mb-12">
-                    <h3 class="text-zinc-500 text-xs font-bold uppercase tracking-[0.4em] mb-4">Tier I</h3>
-                    <div class="text-4xl font-700 italic mb-2">Elite Access</div>
-                    <div class="text-5xl font-800 gold-text">2.997 €</div>
+            <!-- Tier I: Elite -->
+            <div class="glass-card p-14 flex flex-col relative overflow-hidden group">
+                <div class="mb-14">
+                    <h3 class="text-zinc-500 text-xs font-bold uppercase tracking-[0.5em] mb-6">Tier I</h3>
+                    <div class="text-5xl font-700 italic mb-4">Elite Access</div>
+                    <div class="text-6xl font-800 gold-text">2.997 €</div>
+                    <p class="text-zinc-500 text-xs mt-4 uppercase italic">Einmalige Lizenzgebühr</p>
                 </div>
-                <ul class="space-y-6 mb-12 flex-grow text-zinc-300 text-sm">
-                    <li class="flex items-center gap-4"><div class="w-1.5 h-1.5 rounded-full bg-zinc-600"></div> White-Label Framework</li>
-                    <li class="flex items-center gap-4"><div class="w-1.5 h-1.5 rounded-full bg-zinc-600"></div> Core SaaS Infrastructure</li>
-                    <li class="flex items-center gap-4"><div class="w-1.5 h-1.5 rounded-full bg-zinc-600"></div> 30 Tage Support</li>
+                <ul class="space-y-7 mb-16 flex-grow text-zinc-300 text-sm">
+                    <li class="flex items-center gap-5"><div class="w-1.5 h-1.5 rounded-full bg-zinc-600"></div> White-Label SaaS Framework</li>
+                    <li class="flex items-center gap-5"><div class="w-1.5 h-1.5 rounded-full bg-zinc-600"></div> Core Protocol Infrastructure</li>
+                    <li class="flex items-center gap-5"><div class="w-1.5 h-1.5 rounded-full bg-zinc-600"></div> Strategischer Onboarding Guide</li>
+                    <li class="flex items-center gap-5"><div class="w-1.5 h-1.5 rounded-full bg-zinc-600"></div> 30 Tage Technical Support</li>
                 </ul>
-                <button onclick="redirectToDigistore('elite')" class="w-full py-5 rounded-2xl bg-white/5 border border-white/10 font-800 uppercase text-[10px] tracking-widest hover:bg-white/10 transition">Auswählen</button>
+                <button onclick="redirectToDigistore('elite')" class="w-full py-6 rounded-2xl bg-white/5 border border-white/10 font-800 uppercase text-[11px] tracking-[0.2em] hover:bg-white/10 transition active:scale-95">Plan Auswählen</button>
             </div>
 
-            <!-- God Card -->
-            <div class="glass-card p-12 flex flex-col relative overflow-hidden border-[#D4AF37]/40 bg-gradient-to-br from-[#D4AF37]/5 to-transparent">
-                <div class="absolute top-0 right-0 bg-[#D4AF37] text-black px-6 py-2 text-[9px] font-900 uppercase tracking-tighter">Recommended</div>
-                <div class="mb-12">
-                    <h3 class="gold-text text-xs font-bold uppercase tracking-[0.4em] mb-4">Tier II</h3>
-                    <div class="text-4xl font-700 italic mb-2">Gott-Modus</div>
-                    <div class="text-5xl font-800 text-white">5.997 €</div>
+            <!-- Tier II: God Mode -->
+            <div class="glass-card p-14 flex flex-col relative overflow-hidden border-[#D4AF37]/50 bg-gradient-to-br from-[#D4AF37]/10 to-transparent">
+                <div class="absolute top-0 right-0 bg-[#D4AF37] text-black px-8 py-3 text-[10px] font-900 uppercase tracking-tighter italic">Highest Priority</div>
+                <div class="mb-14">
+                    <h3 class="gold-text text-xs font-bold uppercase tracking-[0.5em] mb-6">Tier II</h3>
+                    <div class="text-5xl font-700 italic mb-4">Gott-Modus</div>
+                    <div class="text-6xl font-800 text-white">5.997 €</div>
+                    <p class="text-zinc-400 text-xs mt-4 uppercase italic">Full Done-For-You Solution</p>
                 </div>
-                <ul class="space-y-6 mb-12 flex-grow text-white text-sm">
-                    <li class="flex items-center gap-4 font-bold text-[#D4AF37]"><span>✦</span> Full Done-For-You Setup</li>
-                    <li class="flex items-center gap-4 font-bold"><span>✦</span> Shadow VSL Integration</li>
-                    <li class="flex items-center gap-4 font-bold"><span>✦</span> Lifetime Strategic Access</li>
-                    <li class="flex items-center gap-4 font-bold"><span>✦</span> Personal Account Manager</li>
+                <ul class="space-y-7 mb-16 flex-grow text-white text-sm">
+                    <li class="flex items-center gap-5 font-bold text-[#D4AF37]"><span class="text-lg">✦</span> Full Technical Implementation</li>
+                    <li class="flex items-center gap-5 font-bold"><span class="text-lg">✦</span> Shadow VSL Asset Integration</li>
+                    <li class="flex items-center gap-5 font-bold"><span class="text-lg">✦</span> Custom Sales Funnel Architecture</li>
+                    <li class="flex items-center gap-5 font-bold"><span class="text-lg">✦</span> Lifetime Strategic Partnership</li>
+                    <li class="flex items-center gap-5 font-bold text-[#D4AF37]"><span class="text-lg">✦</span> Direct Slack Access to Founders</li>
                 </ul>
-                <button onclick="redirectToDigistore('god')" class="w-full py-5 btn-gold rounded-2xl text-[10px]">Imperium Starten</button>
+                <button onclick="redirectToDigistore('god')" class="w-full py-6 btn-gold rounded-2xl text-[11px] tracking-[0.2em] active:scale-95">Dominanz Sichern</button>
             </div>
 
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-32 text-center border-t border-white/5 bg-black">
+    <footer class="py-40 text-center border-t border-white/5 bg-black">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="text-xl font-800 tracking-tighter mb-8 opacity-40">SOVEREIGN</div>
-            <p class="text-[9px] text-zinc-600 uppercase tracking-[0.8em]">Secure & Encrypted Protocol &copy; 2024</p>
+            <div class="text-2xl font-800 tracking-tighter mb-10 opacity-30 italic uppercase">SOVEREIGN</div>
+            <div class="flex justify-center gap-8 mb-10 text-[10px] uppercase tracking-widest text-zinc-600 font-bold">
+                <a href="#" class="hover:text-white transition">Privacy</a>
+                <a href="#" class="hover:text-white transition">Terms</a>
+                <a href="#" class="hover:text-white transition">Legal</a>
+            </div>
+            <p class="text-[9px] text-zinc-700 uppercase tracking-[1em]">Secure & Encrypted Protocol &copy; 2024</p>
         </div>
     </footer>
 
     <script>
-        // Konfiguration ohne störende Markdown-Links
+        // Konfiguration für Digistore24
         const DIGISTORE_CONFIG = {
             vendorId: "sooonic008",
-            products: { elite: "676462", god: "676464" }
+            products: { 
+                elite: "676462", 
+                god: "676464" 
+            }
         };
 
         function redirectToDigistore(planKey) {
             const productId = DIGISTORE_CONFIG.products[planKey];
             const vendor = DIGISTORE_CONFIG.vendorId;
+            // Sauber formatierter Link ohne Markdown-Zusätze
             const url = "[https://www.digistore24.com/product/](https://www.digistore24.com/product/)" + productId + "?vendor=" + vendor;
             window.location.href = url;
         }
