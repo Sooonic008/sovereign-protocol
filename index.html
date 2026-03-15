@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sovereign Protocol | High-Ticket SaaS</title>
     
-    <!-- SAUBERE LINKS OHNE KLAMMERN ODER MARKDOWN -->
+    <!-- FIX: Saubere Links ohne eckige Klammern oder Markdown-Reste -->
     <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
     <link href="[https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;600;800&display=swap](https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;600;800&display=swap)" rel="stylesheet">
 
@@ -33,9 +33,9 @@
             box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
         }
         .card-dark {
-            background: rgba(15, 15, 15, 0.6);
+            background: rgba(15, 15, 15, 0.8);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
             transition: all 0.4s ease;
         }
@@ -46,7 +46,7 @@
             transform: translateX(-50%);
             width: 80%;
             height: 600px;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
             z-index: -1;
         }
     </style>
@@ -79,7 +79,7 @@
     <section id="pricing" class="max-w-7xl mx-auto px-6 py-20">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <!-- Elite Plan -->
-            <div class="card-dark p-12 flex flex-col hover:border-[#D4AF37]/30">
+            <div class="card-dark p-12 flex flex-col hover:border-[#D4AF37]/50">
                 <h3 class="text-sm font-bold mb-1 uppercase tracking-[0.3em] text-zinc-500 italic">Elite Access</h3>
                 <div class="text-5xl font-black mb-8 tracking-tighter italic">2.997 €</div>
                 <ul class="text-zinc-400 text-sm space-y-4 mb-10 flex-grow">
@@ -91,7 +91,7 @@
             </div>
 
             <!-- Gott-Modus Plan -->
-            <div class="card-dark p-12 border border-[#D4AF37]/40 relative bg-gradient-to-b from-[#D4AF37]/5 to-transparent flex flex-col hover:shadow-[0_0_30px_rgba(212,175,55,0.1)]">
+            <div class="card-dark p-12 border border-[#D4AF37]/40 relative bg-gradient-to-b from-[#D4AF37]/10 to-transparent flex flex-col hover:shadow-[0_0_30px_rgba(212,175,55,0.15)]">
                 <div class="absolute -top-3 right-8 bg-[#D4AF37] text-black text-[8px] font-black px-4 py-1 rounded-full uppercase italic">Recommended</div>
                 <h3 class="text-sm font-bold mb-1 gold-gradient uppercase tracking-[0.3em] italic">GOTT-MODUS</h3>
                 <div class="text-5xl font-black mb-8 tracking-tighter italic text-white">5.997 €</div>
