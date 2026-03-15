@@ -59,7 +59,6 @@
         text-align: center;
         min-width: 350px;
     }
-    /* Sicherstellung der Sichtbarkeit der Inputs im Admin Panel */
     .admin-panel input {
         color: white !important;
         display: block !important;
@@ -172,25 +171,21 @@
 
     function triggerAdmin() {
         const currentTime = new Date().getTime();
-        // Falls mehr als 2 Sekunden zwischen den Klicks liegen, Zähler zurücksetzen
         if (currentTime - lastClickTime > 2000) clickCount = 0;
-        
         clickCount++;
         lastClickTime = currentTime;
-        
-        // Bei genau 5 Klicks das Panel öffnen
         if (clickCount >= 5) {
             document.getElementById('adminPanel').style.display = 'block';
             document.getElementById('adminPass').focus();
-            clickCount = 0; // Zähler nach Erfolg zurücksetzen
+            clickCount = 0;
         }
     }
 
     function checkAdminPass() {
         const pass = document.getElementById('adminPass').value;
         if (pass === "sov2024") {
-            // Weiterleitung zum Backend/GitHub
-            window.location.href = "https://github.com/sooonic008/sovereign-protocol"; 
+            // Weiterleitung zum Dashboard (statt GitHub)
+            window.location.href = "https://sooonic008.github.io/sovereign-protocol/dashboard.html"; 
         } else {
             alert("Zugriff verweigert.");
             document.getElementById('adminPass').value = "";
