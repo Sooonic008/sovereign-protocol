@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sovereign Protocol | High-Ticket SaaS</title>
     
-    <!-- Scripts & Fonts (Manuell korrigiert) -->
+    <!-- Scripts & Fonts (Sauberer HTML-Standard) -->
     <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
     <link href="[https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;600;800&display=swap](https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;600;800&display=swap)" rel="stylesheet">
 
@@ -118,7 +118,7 @@
         function redirectToDigistore(planKey) {
             const productId = DIGISTORE_CONFIG.products[planKey];
             const vendor = DIGISTORE_CONFIG.vendorId;
-            window.location.href = `https://www.digistore24.com/product/${productId}?vendor=${vendor}`;
+            window.location.href = "[https://www.digistore24.com/product/](https://www.digistore24.com/product/)" + productId + "?vendor=" + vendor;
         }
 
         function scrollToPricing() {
