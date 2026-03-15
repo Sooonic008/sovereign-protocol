@@ -51,6 +51,11 @@
         text-align: center;
         min-width: 350px;
     }
+    /* Sicherstellung der Sichtbarkeit der Inputs im Admin Panel */
+    .admin-panel input {
+        color: white !important;
+        display: block !important;
+    }
     .hero-glow {
         position: absolute;
         top: -10%;
@@ -73,13 +78,15 @@
     <h2 class="text-2xl font-800 gold-gradient mb-2 italic uppercase">Sovereign Admin</h2>
     <p class="text-gray-400 mb-6 text-[10px] uppercase tracking-widest">Identität verifizieren</p>
     
-    <input type="password" id="adminPass" placeholder="Passwort eingeben" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 mb-4 text-center focus:border-[#D4AF37] outline-none transition text-sm">
-    
-    <button onclick="checkAdminPass()" class="w-full gold-bg py-3 rounded-xl font-bold text-xs uppercase tracking-widest mb-4">
-        Login
-    </button>
-    
-    <button onclick="closeAdmin()" class="text-[9px] text-zinc-600 uppercase tracking-widest hover:text-white transition">Abbrechen</button>
+    <div class="space-y-4">
+        <input type="password" id="adminPass" placeholder="Passwort eingeben" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 text-center focus:border-[#D4AF37] outline-none transition text-sm">
+        
+        <button onclick="checkAdminPass()" class="w-full gold-bg py-3 rounded-xl font-bold text-xs uppercase tracking-widest">
+            Login
+        </button>
+        
+        <button onclick="closeAdmin()" class="block w-full text-[9px] text-zinc-600 uppercase tracking-widest hover:text-white transition mt-2">Abbrechen</button>
+    </div>
 </div>
 
 <nav class="max-w-7xl mx-auto flex justify-between items-center px-6 py-8 relative z-50">
@@ -171,7 +178,7 @@
     function checkAdminPass() {
         const pass = document.getElementById('adminPass').value;
         if (pass === "sov2024") {
-            // HIER kannst du die Ziel-URL deines Dashboards eingeben
+            // Hier Ziel-URL anpassen
             window.location.href = "https://github.com/sooonic008/sovereign-protocol"; 
         } else {
             alert("Zugriff verweigert.");
@@ -191,7 +198,8 @@
     }
 
     function scrollToPricing() {
-        document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+        const pricing = document.getElementById('pricing');
+        if(pricing) pricing.scrollIntoView({ behavior: 'smooth' });
     }
 </script>
 
