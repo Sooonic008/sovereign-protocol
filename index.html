@@ -115,11 +115,16 @@
         function redirectToDigistore(planKey) {
             const productId = DIGISTORE_CONFIG.products[planKey];
             const vendor = DIGISTORE_CONFIG.vendorId;
-            window.location.href = "[https://www.digistore24.com/product/](https://www.digistore24.com/product/)" + productId + "?vendor=" + vendor;
+            // Wichtig: Keine eckigen Klammern hier!
+            const baseUrl = "[https://www.digistore24.com/product/](https://www.digistore24.com/product/)";
+            window.location.href = baseUrl + productId + "?vendor=" + vendor;
         }
 
         function scrollToPricing() {
-            document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+            const element = document.getElementById('pricing');
+            if(element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
         }
     </script>
 </body>
