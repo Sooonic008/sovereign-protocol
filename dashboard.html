@@ -15,62 +15,62 @@ const App = () => {
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-[#d4af37] selection:text-black antialiased">
       
       {/* Ultra-Kompakte Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/5 py-3">
+      <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/5 py-2">
         <div className="max-w-6xl mx-auto flex justify-between items-center px-6">
-          <div className="text-lg font-black italic tracking-tighter uppercase">SOV<span className="text-[#d4af37]">ER</span>EIGN</div>
-          <button onClick={() => setShowLogin(true)} className="text-[9px] font-bold border border-white/20 px-3 py-1 rounded uppercase tracking-widest">Login</button>
+          <div className="text-base font-black italic tracking-tighter uppercase text-white">SOV<span className="text-[#d4af37]">ER</span>EIGN</div>
+          <button onClick={() => setShowLogin(true)} className="text-[8px] font-bold border border-white/20 px-2 py-1 rounded uppercase tracking-widest hover:bg-white/10 transition-all">Access</button>
         </div>
       </nav>
 
-      {/* Hero - Extrem gestrafft für sofortige Sichtbarkeit der Karten */}
-      <header className="pt-24 pb-6 px-6 text-center bg-gradient-to-b from-[#d4af37]/10 to-transparent">
-        <h1 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter mb-2">DIGITAL SOVEREIGNTY</h1>
-        <p className="text-gray-400 text-xs uppercase tracking-widest font-bold">Wähle deine Stufe zur Dominanz</p>
+      {/* Hero - Extrem flach für sofortigen Fokus auf die Angebote */}
+      <header className="pt-16 pb-4 px-6 text-center bg-gradient-to-b from-[#d4af37]/10 to-transparent">
+        <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter mb-1">DIGITAL SOVEREIGNTY</h1>
+        <p className="text-gray-400 text-[10px] uppercase tracking-[0.2em] font-bold">Wähle deine Stufe zur Dominanz</p>
       </header>
 
-      {/* Pricing Cards - Jetzt viel weiter oben */}
-      <main className="max-w-5xl mx-auto px-4 pb-12">
-        <div className="grid md:grid-cols-2 gap-4">
+      {/* Pricing Cards - Jetzt direkt im Sichtfeld */}
+      <main className="max-w-5xl mx-auto px-4 pb-8">
+        <div className="grid md:grid-cols-2 gap-4 items-stretch">
           
           {/* Elite Card */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 flex flex-col hover:border-[#d4af37]/50 transition-all">
-            <div className="mb-4">
-              <span className="text-[8px] font-black text-gray-500 uppercase tracking-[0.3em]">Phase I</span>
-              <h2 className="text-2xl font-black italic uppercase">Elite Access</h2>
-              <div className="text-2xl font-black text-white mt-1">2.997 €</div>
+          <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-5 flex flex-col hover:border-[#d4af37]/50 transition-all shadow-xl">
+            <div className="mb-3">
+              <span className="text-[7px] font-black text-gray-500 uppercase tracking-[0.3em]">Phase I</span>
+              <h2 className="text-xl font-black italic uppercase leading-none">Elite Access</h2>
+              <div className="text-xl font-black text-white mt-1">2.997 €</div>
             </div>
             
-            <ul className="space-y-2 mb-6 flex-grow">
+            <ul className="space-y-1.5 mb-5 flex-grow">
               {['White-Label SaaS Lizenz', 'Core Infrastructure', 'Landing Page Assets', 'Strategischer Support'].map(item => (
-                <li key={item} className="flex items-center gap-2 text-[10px] font-bold uppercase text-gray-400">
+                <li key={item} className="flex items-center gap-2 text-[9px] font-bold uppercase text-gray-400">
                   <CheckIcon /> {item}
                 </li>
               ))}
             </ul>
 
-            <button onClick={buyElite} className="w-full py-4 bg-white text-black rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-[#d4af37] transition-colors shadow-lg shadow-white/5">
+            <button onClick={buyElite} className="w-full py-3.5 bg-white text-black rounded-xl font-black uppercase text-[9px] tracking-widest hover:bg-[#d4af37] transition-colors shadow-lg active:scale-95">
               Plan Wählen
             </button>
           </div>
 
           {/* Gott-Modus Card */}
-          <div className="bg-[#0a0a0a] border-2 border-[#d4af37] rounded-2xl p-6 flex flex-col relative shadow-[0_0_30px_rgba(212,175,55,0.1)] scale-105 z-10">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#d4af37] text-black px-3 py-0.5 rounded-full text-[7px] font-black uppercase">Empfohlen</div>
-            <div className="mb-4">
-              <span className="text-[8px] font-black text-[#d4af37] uppercase tracking-[0.3em]">Phase II</span>
-              <h2 className="text-2xl font-black italic uppercase text-[#d4af37]">Gott-Modus</h2>
-              <div className="text-2xl font-black text-white mt-1">5.997 €</div>
+          <div className="bg-[#0a0a0a] border-2 border-[#d4af37] rounded-2xl p-5 flex flex-col relative shadow-[0_0_40px_rgba(212,175,55,0.15)] z-10">
+            <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[#d4af37] text-black px-3 py-0.5 rounded-full text-[6px] font-black uppercase tracking-widest">Empfohlen</div>
+            <div className="mb-3">
+              <span className="text-[7px] font-black text-[#d4af37] uppercase tracking-[0.3em]">Phase II</span>
+              <h2 className="text-xl font-black italic uppercase leading-none text-[#d4af37]">Gott-Modus</h2>
+              <div className="text-xl font-black text-white mt-1">5.997 €</div>
             </div>
             
-            <ul className="space-y-2 mb-6 flex-grow">
+            <ul className="space-y-1.5 mb-5 flex-grow">
               {['Full Tech-Setup (DFY)', 'Shadow VSL Integration', 'Funnel Architecture', 'Lifetime Partnership'].map(item => (
-                <li key={item} className="flex items-center gap-2 text-[10px] font-bold uppercase text-white">
+                <li key={item} className="flex items-center gap-2 text-[9px] font-bold uppercase text-white">
                   <StarIcon /> {item}
                 </li>
               ))}
             </ul>
 
-            <button onClick={buyGod} className="w-full py-4 bg-[#d4af37] text-black rounded-xl font-black uppercase text-[10px] tracking-widest hover:brightness-110 transition-all shadow-lg shadow-[#d4af37]/20">
+            <button onClick={buyGod} className="w-full py-3.5 bg-[#d4af37] text-black rounded-xl font-black uppercase text-[9px] tracking-widest hover:brightness-110 transition-all shadow-lg shadow-[#d4af37]/20 active:scale-95">
               Dominanz Sichern
             </button>
           </div>
@@ -78,23 +78,23 @@ const App = () => {
         </div>
       </main>
 
-      {/* Minimaler Footer */}
-      <footer className="py-8 text-center opacity-20 text-[7px] font-black tracking-[0.5em] uppercase">
+      {/* Kompakter Footer */}
+      <footer className="py-4 text-center opacity-20 text-[6px] font-black tracking-[0.5em] uppercase">
         Sovereign Protocol &copy; 2024
       </footer>
 
       {/* Login Modal */}
       {showLogin && (
         <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-6 backdrop-blur-sm">
-          <div className="w-full max-w-xs bg-zinc-900 border border-white/10 p-8 rounded-3xl">
-            <h3 className="text-center font-black uppercase italic mb-6">Founder PIN</h3>
+          <div className="w-full max-w-xs bg-zinc-900 border border-white/10 p-6 rounded-3xl shadow-2xl">
+            <h3 className="text-center font-black uppercase italic mb-4 text-sm">Founder PIN</h3>
             <input 
               type="password" 
               placeholder="••••" 
-              className="w-full bg-black border border-white/10 p-4 rounded-xl text-center text-2xl tracking-[0.5em] mb-4"
+              className="w-full bg-black border border-white/10 p-3 rounded-xl text-center text-xl tracking-[0.5em] mb-4 text-white focus:border-[#d4af37] outline-none"
               onChange={(e) => e.target.value === 'sovereign2024' && (window.location.href = '#dashboard')}
             />
-            <button onClick={() => setShowLogin(false)} className="w-full text-[8px] font-bold uppercase text-gray-500">Abbrechen</button>
+            <button onClick={() => setShowLogin(false)} className="w-full text-[8px] font-bold uppercase text-gray-500 hover:text-white transition-colors">Abbrechen</button>
           </div>
         </div>
       )}
