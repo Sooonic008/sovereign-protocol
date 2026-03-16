@@ -1,45 +1,217 @@
-/* Ersetze/Ergänze dies in deinem <style> Bereich */
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOVEREIGN | God Mode</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.4);
+            --dark-core: #020202;
+            --panel-bg: rgba(10, 10, 10, 0.95);
+        }
 
-/* WICHTIG: Scanline darf keine Klicks blockieren */
-body::before {
-    content: " ";
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
-    background-size: 100% 4px;
-    z-index: 100;
-    pointer-events: none; /* Das hier erlaubt Klicks durch den Effekt hindurch */
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Optimierte Buttons für maximale Sichtbarkeit */
-.btn-action {
-    background: rgba(212, 175, 55, 0.1);
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    padding: 15px;
-    width: 100%;
-    margin-top: 15px;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-    z-index: 200; /* Über den Scanlines */
-    overflow: hidden;
-}
+        body {
+            background-color: var(--dark-core);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
 
-.btn-action:hover {
-    background: var(--gold);
-    color: #000;
-    box-shadow: 0 0 20px var(--gold);
-    transform: scale(1.02);
-}
+        /* Scanline Overlay - pointer-events: none ist ESSENZIELL */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 9999;
+        }
 
-/* Goldene Akzente für die Stat-Boxen */
-.stat-value {
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--gold-bright); /* Helleres Gold für mehr Kontrast */
-    text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-}
+        /* Top Bar */
+        .top-nav {
+            height: 70px;
+            border-bottom: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            justify-content: space-between;
+            background: black;
+        }
+
+        /* Das Dashboard Grid */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr 320px;
+            flex-grow: 1;
+            gap: 2px; /* Trennlinien-Look */
+            background: var(--gold); /* Erzeugt Linien zwischen den Panels */
+            border-bottom: 1px solid var(--gold);
+        }
+
+        .panel {
+            background: var(--dark-core);
+            padding: 25px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* 6000€ BUTTON DESIGN */
+        .btn-gold-heavy {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+            color: black;
+            border: none;
+            padding: 20px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 0 15px var(--gold-glow);
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+            position: relative;
+            z-index: 10; /* Ganz oben! */
+        }
+
+        .btn-gold-heavy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px var(--gold);
+            filter: brightness(1.2);
+        }
+
+        .btn-gold-heavy:active {
+            transform: translateY(1px);
+        }
+
+        /* Metrics */
+        .metric-card {
+            margin-bottom: 40px;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--gold);
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 38px;
+            font-weight: 900;
+            font-style: italic;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        /* Terminal Simulation */
+        #console {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #555;
+            height: 150px;
+            border-top: 1px solid #222;
+            padding: 20px;
+            background: #050505;
+        }
+
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            background: #00ff41;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            box-shadow: 0 0 10px #00ff41;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="top-nav">
+        <div style="font-weight: 900; font-style: italic; letter-spacing: 2px;">SOVEREIGN <span style="color:var(--gold)">V2.4</span></div>
+        <div style="font-size: 12px; color: #666;">SESSION: <span style="color: var(--gold);">FOUNDER_01</span></div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="panel">
+            <div class="metric-card">
+                <div class="metric-label">Liquidity Index</div>
+                <div class="metric-value">€ 1.48M</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Efficiency</div>
+                <div class="metric-value">94.2%</div>
+            </div>
+
+            <button class="btn-gold-heavy" onclick="alert('Initiating Sovereign Transaction...')">
+                Scale Capital
+            </button>
+        </aside>
+
+        <main class="panel" style="display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #111 0%, #000 100%);">
+            <div style="text-align: center;">
+                <div style="border: 2px solid var(--gold); padding: 40px; border-radius: 50%; width: 300px; height: 300px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 50px var(--gold-glow);">
+                    <h2 style="font-size: 12px; letter-spacing: 10px; opacity: 0.5;">CORE ACTIVE</h2>
+                </div>
+            </div>
+        </main>
+
+        <aside class="panel">
+            <div class="metric-label" style="margin-bottom: 20px;">System Status</div>
+            <div style="margin-bottom: 15px;"><span class="status-dot"></span> Identity Cloak: ACTIVE</div>
+            <div style="margin-bottom: 15px;"><span class="status-dot"></span> Proxy Matrix: STABLE</div>
+            
+            <hr style="border-color: #222; margin: 30px 0;">
+
+            <button class="btn-gold-heavy" style="background: transparent; border: 1px solid var(--gold); color: var(--gold);" onclick="alert('God Mode is already active.')">
+                God Mode Active
+            </button>
+            
+            <button class="btn-gold-heavy" onclick="window.location.href='index.html'">
+                System Exit
+            </button>
+        </aside>
+    </div>
+
+    <footer id="console">
+        <div>> [SYSTEM] Welcome, Founder. Sovereign Protocol is online.</div>
+        <div id="log-line">> [SEC] Monitoring network traffic... 100% clean.</div>
+    </footer>
+
+    <script>
+        // Kleines Terminal-Script für das Gefühl einer "lebenden" Maschine
+        const log = document.getElementById('log-line');
+        const updates = [
+            "> [ASSET] Bitcoin liquidity node connected.",
+            "> [SEC] Encrypting outgoing data packets...",
+            "> [SYS] Profit-Bot #42 reporting 12% increase.",
+            "> [NET] Secure tunnel established via Singapore."
+        ];
+        
+        setInterval(() => {
+            const div = document.createElement('div');
+            div.innerText = updates[Math.floor(Math.random() * updates.length)];
+            document.getElementById('console').appendChild(div);
+            if (document.getElementById('console').childNodes.length > 8) {
+                document.getElementById('console').removeChild(document.getElementById('console').firstChild);
+            }
+        }, 4000);
+    </script>
+
+</body>
+</html>
