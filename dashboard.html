@@ -1,233 +1,165 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, Shield, Terminal, ArrowRight, Check, Star } from 'lucide-react';
+
+// Icons als Inline-SVG für maximale Stabilität in der Vorschau
+const LockIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>;
+const CheckIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>;
+const StarIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="#d4af37" stroke="#d4af37" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>;
 
 const App = () => {
-  const [view, setView] = useState('landing'); // 'landing', 'login', 'dashboard'
-  const [password, setPassword] = useState('');
-  const [loginStatus, setLoginStatus] = useState('');
+  const [activeView, setActiveView] = useState('landing'); // landing, login, dashboard
+  const [pin, setPin] = useState('');
+  const [error, setError] = useState('');
 
-  // Scroll to top when view changes
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [view]);
-
-  const handleLogin = (e) => {
+  // Passwort-Check Funktion
+  const tryLogin = (e) => {
     e.preventDefault();
-    if (password === 'sovereign2024') {
-      setLoginStatus('SUCCESS: Weiterleitung zu dashboard.html...');
-      setTimeout(() => {
-        setView('dashboard');
-        setLoginStatus('');
-        setPassword('');
-      }, 1200);
+    if (pin === 'sovereign2024') {
+      setActiveView('dashboard');
     } else {
-      setLoginStatus('FEHLER: Ungültiger Sicherheitsschlüssel.');
-      setTimeout(() => setLoginStatus(''), 3000);
+      setError('ZUGRIFF VERWEIGERT');
+      setTimeout(() => setError(''), 2000);
     }
   };
 
-  // --- LANDING PAGE COMPONENT ---
-  const LandingPage = () => (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-[#d4af37] selection:text-black font-sans">
-      {/* Glow Effect */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-radial-gradient from-[#d4af3715] to-transparent pointer-events-none -z-10" 
-           style={{ background: 'radial-gradient(circle at 50% -10%, rgba(212, 175, 55, 0.15) 0%, transparent 70%)' }}></div>
+  // Komponente: Landing Page
+  const Landing = () => (
+    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-[#d4af37] selection:text-black">
+      {/* Background Glow */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[500px] pointer-events-none opacity-20"
+           style={{ background: 'radial-gradient(circle at 50% 0%, #d4af37 0%, transparent 70%)' }}></div>
 
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-[#050505cc] backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-          <div className="text-2xl font-black tracking-tighter italic uppercase">
+      {/* Nav */}
+      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-black/80 backdrop-blur-md px-6 py-5">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="text-2xl font-black italic tracking-tighter uppercase">
             SOV<span className="text-[#d4af37]">ER</span>EIGN
           </div>
           <button 
-            onClick={() => setView('login')}
-            className="bg-[#d4af37] text-black px-6 py-2 rounded-lg text-[11px] font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_20px_rgba(212,175,55,0.2)]"
+            onClick={() => setActiveView('login')}
+            className="bg-[#d4af37] text-black px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform"
           >
             Access
           </button>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <header className="pt-48 pb-32 px-6 text-center max-w-5xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-10 border border-[#d4af3733] rounded-full bg-[#d4af370a] backdrop-blur-sm">
-          <div className="w-1.5 h-1.5 bg-[#d4af37] rounded-full animate-pulse shadow-[0_0_8px_#d4af37]"></div>
-          <span className="text-[10px] font-bold text-[#d4af37] tracking-[0.2em] uppercase">Sovereign Protocol v2.4</span>
+      {/* Hero */}
+      <header className="pt-40 pb-20 px-6 text-center">
+        <div className="inline-block border border-[#d4af37]/30 bg-[#d4af37]/5 px-4 py-1 rounded-full mb-8">
+          <span className="text-[10px] font-bold text-[#d4af37] tracking-[0.3em] uppercase">Sovereign Protocol v2.4</span>
         </div>
-
-        <h1 className="text-6xl md:text-[110px] font-black italic tracking-tighter leading-[0.85] uppercase mb-10">
-          DIGITAL <br />
-          <span className="bg-gradient-to-br from-[#C5A021] via-[#F5E0A3] to-[#B8860B] bg-clip-text text-transparent">SOVEREIGNTY</span>
+        <h1 className="text-6xl md:text-[100px] font-black italic uppercase tracking-tighter leading-[0.9] mb-8">
+          DIGITAL <br/>
+          <span className="bg-gradient-to-r from-[#d4af37] via-[#f5e0a3] to-[#b8860b] bg-clip-text text-transparent">SOVEREIGNTY</span>
         </h1>
-        
-        <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-14 font-medium leading-relaxed">
-          Erbaue ein unantastbares Business-Imperium mit maximaler Hebelwirkung.
+        <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-12 font-medium">
+          Erbaue ein unantastbares Business-Imperium mit maximaler Hebelwirkung und technischer Dominanz.
         </p>
-
         <button 
-          onClick={() => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' })}
-          className="bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-black px-14 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.1em] hover:scale-105 transition-all shadow-2xl shadow-[#d4af3722]"
+          onClick={() => setActiveView('login')}
+          className="bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-black px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl shadow-[#d4af37]/20 hover:brightness-110 transition-all"
         >
-          Das Protokoll öffnen
+          Protokoll Starten
         </button>
       </header>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="max-w-7xl mx-auto px-6 py-32">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* Elite Access */}
-          <div className="bg-[#0a0a0a] border border-white/5 p-12 rounded-[40px] hover:border-[#d4af3733] transition-all flex flex-col h-full">
-            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-2">Stufe I</span>
-            <h3 className="text-4xl font-black italic uppercase mb-4">Elite Access</h3>
-            <div className="text-5xl font-black mb-10">2.997 € <span className="text-sm font-normal text-gray-500 tracking-normal">+ MwSt.</span></div>
-            
-            <ul className="space-y-5 mb-12 flex-grow">
-              {['White-Label SaaS Master-Lizenz', 'Core Protocol Infrastructure', 'Premium Landing Page Assets', 'Strategischer Onboarding Guide', 'Priority Email Support'].map((item) => (
-                <li key={item} className="flex items-start gap-4 text-gray-400 font-semibold text-base">
-                  <Check size={20} className="text-[#d4af37] shrink-0 mt-0.5" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            
-            <button 
-              onClick={() => window.open('https://www.digistore24.com/product/676462?vendor=sooonic008', '_blank')}
-              className="w-full py-5 border border-white/10 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-white/5 transition-all"
-            >
-              Plan wählen
-            </button>
-          </div>
+      {/* Pricing / Offers */}
+      <section className="max-w-6xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-8">
+        {/* Elite */}
+        <div className="bg-[#0a0a0a] border border-white/10 p-10 rounded-[35px] hover:border-[#d4af37]/30 transition-all">
+          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">Stufe I</p>
+          <h3 className="text-3xl font-black italic uppercase mb-4">Elite Access</h3>
+          <p className="text-4xl font-black mb-10">2.997 € <span className="text-sm font-normal text-gray-500 tracking-normal">+ MwSt.</span></p>
+          <ul className="space-y-4 mb-10">
+            {['White-Label SaaS Master-Lizenz', 'Core Protocol Infrastructure', 'Premium Landing Page Assets', 'Strategischer Support'].map(t => (
+              <li key={t} className="flex items-center gap-3 text-gray-400 font-bold text-sm"><CheckIcon /> {t}</li>
+            ))}
+          </ul>
+          <button onClick={() => window.open('https://www.digistore24.com/product/676462?vendor=sooonic008')} className="w-full py-4 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white/5 transition-all">Auswählen</button>
+        </div>
 
-          {/* Gott-Modus */}
-          <div className="bg-[#0a0a0a] border-2 border-[#d4af37] p-12 rounded-[40px] relative shadow-[0_0_80px_rgba(212,175,55,0.08)] flex flex-col h-full">
-            <div className="absolute -top-4 right-12 bg-[#d4af37] text-black px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter">
-              Maximaler Impact
-            </div>
-            <span className="text-[11px] font-bold text-[#d4af37] uppercase tracking-widest mb-2">Stufe II</span>
-            <h3 className="text-4xl font-black italic uppercase mb-4">Gott-Modus</h3>
-            <div className="text-5xl font-black mb-10">5.997 € <span className="text-sm font-normal text-gray-400 tracking-normal">+ MwSt.</span></div>
-            
-            <ul className="space-y-5 mb-12 flex-grow">
-              {['Full Tech-Setup durch Experten (DFY)', 'Shadow VSL & Sales-Asset Integration', 'Custom Funnel Architecture Tuning', 'Lifetime Strategic Partnership', 'Exklusiver Slack-Direct Access'].map((item) => (
-                <li key={item} className="flex items-start gap-4 text-white font-bold text-base">
-                  <Star size={20} className="text-[#d4af37] fill-[#d4af37] shrink-0 mt-0.5" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            
-            <button 
-              onClick={() => window.open('https://www.digistore24.com/product/676464?vendor=sooonic008', '_blank')}
-              className="w-full py-5 bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-black rounded-2xl text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-lg"
-            >
-              Dominanz Sichern
-            </button>
-          </div>
+        {/* Gott-Modus */}
+        <div className="bg-[#0a0a0a] border-2 border-[#d4af37] p-10 rounded-[35px] relative shadow-2xl shadow-[#d4af37]/5">
+          <div className="absolute -top-3 right-8 bg-[#d4af37] text-black px-3 py-1 rounded-full text-[9px] font-black uppercase">Empfohlen</div>
+          <p className="text-[10px] font-bold text-[#d4af37] uppercase tracking-widest mb-1">Stufe II</p>
+          <h3 className="text-3xl font-black italic uppercase mb-4">Gott-Modus</h3>
+          <p className="text-4xl font-black mb-10">5.997 € <span className="text-sm font-normal text-gray-400 tracking-normal">+ MwSt.</span></p>
+          <ul className="space-y-4 mb-10">
+            {['Full Tech-Setup (Done-for-you)', 'Shadow VSL & Sales Integration', 'Custom Funnel Architecture', 'Lifetime Strategic Partnership'].map(t => (
+              <li key={t} className="flex items-center gap-3 text-white font-bold text-sm"><StarIcon /> {t}</li>
+            ))}
+          </ul>
+          <button onClick={() => window.open('https://www.digistore24.com/product/676464?vendor=sooonic008')} className="w-full py-4 bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-black rounded-xl text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all">Dominanz Sichern</button>
         </div>
       </section>
 
-      <footer className="py-20 text-center opacity-20 text-[10px] font-bold tracking-[0.5em] uppercase border-t border-white/5">
-        &copy; 2024 SOVEREIGN PROTOCOL | THE GOLD STANDARD
+      <footer className="py-20 text-center opacity-20 text-[9px] font-bold tracking-[0.4em] uppercase">
+        © 2024 SOVEREIGN PROTOCOL | THE GOLD STANDARD
       </footer>
     </div>
   );
 
-  // --- LOGIN SCREEN COMPONENT ---
-  const LoginScreen = () => (
+  // Komponente: Login
+  const Login = () => (
     <div className="min-h-screen bg-black flex items-center justify-center p-6 font-sans">
-      <div className="w-full max-w-md bg-[#0d0d0d] border border-white/10 rounded-[40px] p-12 relative overflow-hidden shadow-2xl">
-        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent"></div>
-        
-        <div className="text-center mb-12">
-          <p className="text-[#d4af37] text-[10px] font-black tracking-[0.4em] uppercase mb-4">Identity Check</p>
-          <h2 className="text-4xl font-black italic text-white uppercase tracking-tighter">Founder Login</h2>
-          <p className="text-gray-500 text-[10px] mt-3 uppercase tracking-[0.2em] font-bold">Sicherheitsschlüssel erforderlich.</p>
+      <div className="w-full max-w-sm bg-[#0d0d0d] border border-white/10 rounded-[40px] p-10 relative overflow-hidden shadow-2xl shadow-[#d4af37]/5">
+        <div className="absolute top-0 left-0 w-full h-1 bg-[#d4af37]"></div>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-black italic text-white uppercase tracking-tighter">Founder Login</h2>
+          <p className="text-gray-500 text-[10px] mt-2 uppercase tracking-widest">Sicherheitsschlüssel erforderlich</p>
         </div>
-
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div className="relative group">
-            <input 
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••••••"
-              className="w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-5 text-center text-white placeholder:text-gray-800 focus:border-[#d4af3755] focus:outline-none transition-all tracking-[0.5em] text-lg font-bold"
-              autoFocus
-            />
-          </div>
-
-          <button 
-            type="submit"
-            className="w-full bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-black font-black py-5 rounded-2xl uppercase text-xs tracking-[0.2em] transition-all active:scale-95 shadow-xl shadow-[#d4af3715]"
-          >
-            Login Bestätigen
+        <form onSubmit={tryLogin} className="space-y-4">
+          <input 
+            type="password"
+            value={pin}
+            onChange={(e) => setPin(e.target.value)}
+            className="w-full bg-black border border-white/10 rounded-2xl p-4 text-center text-white focus:border-[#d4af37]/50 outline-none transition-all tracking-[0.5em] font-bold"
+            placeholder="••••••"
+            autoFocus
+          />
+          <button className="w-full bg-[#d4af37] text-black font-black py-4 rounded-2xl uppercase text-[10px] tracking-widest hover:brightness-110 active:scale-95 transition-all">
+            Identität Verifizieren
           </button>
         </form>
-
-        <div className="h-8 mt-6">
-          {loginStatus && (
-            <p className={`text-[10px] text-center font-black tracking-widest uppercase animate-pulse ${loginStatus.includes('SUCCESS') ? 'text-[#d4af37]' : 'text-red-500'}`}>
-              {loginStatus}
-            </p>
-          )}
-        </div>
-
-        <button 
-          onClick={() => setView('landing')}
-          className="mt-4 w-full text-gray-700 hover:text-gray-400 text-[9px] font-black uppercase tracking-[0.3em] transition-colors"
-        >
-          Abbrechen
-        </button>
+        {error && <p className="text-red-500 text-[9px] font-bold text-center mt-4 uppercase tracking-widest animate-pulse">{error}</p>}
+        <button onClick={() => setActiveView('landing')} className="w-full text-gray-700 hover:text-gray-400 text-[9px] mt-6 font-black uppercase tracking-widest transition-colors">Abbrechen</button>
       </div>
     </div>
   );
 
-  // --- DASHBOARD COMPONENT ---
+  // Komponente: Dashboard
   const Dashboard = () => (
-    <div className="min-h-screen bg-[#050505] text-white p-6 md:p-12 font-mono">
-      <div className="max-w-6xl mx-auto border border-white/10 rounded-3xl overflow-hidden bg-[#0a0a0a] shadow-2xl">
-        <div className="border-b border-white/5 p-5 flex items-center justify-between bg-black/40 backdrop-blur-md">
-          <div className="flex items-center gap-3">
-            <Terminal size={18} className="text-[#d4af37]" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">System Dashboard // Access Granted</span>
+    <div className="min-h-screen bg-[#050505] text-white p-8 font-mono">
+      <div className="max-w-5xl mx-auto border border-[#d4af37]/20 rounded-3xl overflow-hidden bg-[#0a0a0a]">
+        <div className="bg-black/50 p-4 border-b border-white/5 flex justify-between items-center">
+          <div className="flex gap-2 items-center text-[#d4af37]">
+            <LockIcon />
+            <span className="text-[10px] font-bold tracking-widest uppercase">Encrypted Dashboard // Admin</span>
           </div>
-          <button onClick={() => setView('landing')} className="text-[10px] font-bold text-red-500 hover:brightness-150 uppercase tracking-widest transition-all">Disconnect</button>
+          <button onClick={() => setActiveView('landing')} className="text-red-500 text-[9px] font-black uppercase">Logout</button>
         </div>
-        
-        <div className="p-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-black/50 p-8 rounded-2xl border border-white/5 relative group hover:border-[#d4af3722] transition-all">
-            <p className="text-[10px] text-gray-600 uppercase font-black mb-3">Status</p>
-            <p className="text-2xl font-black text-green-500 italic">SYSTEM_ACTIVE</p>
+        <div className="p-10 text-center">
+          <h2 className="text-2xl font-black italic text-[#d4af37] mb-4 uppercase tracking-tighter">Willkommen, Gründer</h2>
+          <div className="bg-black p-6 rounded-xl border border-white/5 inline-block text-left min-w-[300px]">
+            <p className="text-[11px] text-green-500 mb-2 font-bold">{`> SYSTEM_LOADED: 100%`}</p>
+            <p className="text-[11px] text-green-500 mb-2 font-bold">{`> LICENSES: ACTIVE`}</p>
+            <p className="text-[11px] text-green-500 mb-4 font-bold">{`> ASSETS: READY`}</p>
+            <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+              <div className="h-full bg-[#d4af37] w-2/3 animate-pulse"></div>
+            </div>
           </div>
-          <div className="bg-black/50 p-8 rounded-2xl border border-white/5 relative hover:border-[#d4af3722] transition-all">
-            <p className="text-[10px] text-gray-600 uppercase font-black mb-3">Protocol Level</p>
-            <p className="text-2xl font-black text-[#d4af37] italic">V2.4_SOVEREIGN</p>
-          </div>
-          <div className="bg-black/50 p-8 rounded-2xl border border-white/5 relative hover:border-[#d4af3722] transition-all">
-            <p className="text-[10px] text-gray-600 uppercase font-black mb-3">Data Stream</p>
-            <p className="text-2xl font-black text-white italic">ENCRYPTED</p>
-          </div>
-        </div>
-
-        <div className="p-10 border-t border-white/5 bg-black/10">
-          <h4 className="text-[11px] font-black uppercase tracking-[0.3em] mb-6 text-[#d4af37]">Live Assets Initialization</h4>
-          <div className="space-y-3 opacity-40 text-[11px] font-bold">
-            <p className="flex gap-4"><span className="text-green-500">[OK]</span> {`CORE_SYSTEM_KERNEL_V2.4_BOOTSTRAP`}</p>
-            <p className="flex gap-4"><span className="text-green-500">[OK]</span> {`WHITE_LABEL_LICENSE_VALIDATION`}</p>
-            <p className="flex gap-4"><span className="text-green-500">[OK]</span> {`DECRYPTING_STRATEGY_BLUEPRINTS... 100%`}</p>
-            <p className="flex gap-4 animate-pulse"><span className="text-[#d4af37]">[WAIT]</span> {`AWAITING_FOUNDER_DIRECTIVE...`}</p>
-          </div>
+          <p className="mt-10 text-gray-600 text-[10px] uppercase font-bold tracking-[0.3em]">Weitere Module werden initialisiert...</p>
         </div>
       </div>
     </div>
   );
 
   return (
-    <div className="antialiased">
-      {view === 'landing' && <LandingPage />}
-      {view === 'login' && <LoginScreen />}
-      {view === 'dashboard' && <Dashboard />}
-    </div>
+    <>
+      {activeView === 'landing' && <Landing />}
+      {activeView === 'login' && <Login />}
+      {activeView === 'dashboard' && <Dashboard />}
+    </>
   );
 };
 
