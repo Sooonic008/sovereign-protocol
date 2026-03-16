@@ -3,215 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN | God Mode</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>SOVEREIGN | Dashboard</title>
     <style>
         :root {
             --gold: #D4AF37;
-            --gold-glow: rgba(212, 175, 55, 0.4);
-            --dark-core: #020202;
-            --panel-bg: rgba(10, 10, 10, 0.95);
+            --dark: #050505;
+            --panel-bg: #0a0a0a;
+            --border: rgba(212, 175, 55, 0.2);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
-            background-color: var(--dark-core);
+            background-color: var(--dark);
             color: #fff;
-            font-family: 'Inter', sans-serif;
+            padding: 20px;
             height: 100vh;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
         }
 
-        /* Scanline Overlay - pointer-events: none ist ESSENZIELL */
-        body::after {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        /* Top Bar */
-        .top-nav {
-            height: 70px;
-            border-bottom: 1px solid var(--gold);
+        /* HEADER */
+        .top-bar {
             display: flex;
-            align-items: center;
-            padding: 0 30px;
             justify-content: space-between;
-            background: black;
+            align-items: center;
+            padding: 15px 30px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 20px;
         }
 
-        /* Das Dashboard Grid */
-        .main-layout {
+        .logo { font-size: 20px; font-weight: 900; font-style: italic; letter-spacing: 1px; }
+        .logo span { color: var(--gold); }
+
+        /* MAIN GRID */
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: 320px 1fr 320px;
-            flex-grow: 1;
-            gap: 2px; /* Trennlinien-Look */
-            background: var(--gold); /* Erzeugt Linien zwischen den Panels */
-            border-bottom: 1px solid var(--gold);
+            grid-template-columns: 300px 1fr 300px;
+            gap: 20px;
+            height: calc(100vh - 110px);
         }
 
         .panel {
-            background: var(--dark-core);
-            padding: 25px;
-            overflow-y: auto;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
             position: relative;
         }
 
-        /* 6000€ BUTTON DESIGN */
-        .btn-gold-heavy {
-            display: block;
-            width: 100%;
-            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-            color: black;
-            border: none;
-            padding: 20px;
-            font-weight: 900;
+        h2 {
+            font-size: 14px;
+            color: var(--gold);
             text-transform: uppercase;
             letter-spacing: 2px;
-            font-size: 14px;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 0 15px var(--gold-glow);
-            transition: all 0.2s ease;
-            text-align: center;
-            text-decoration: none;
-            position: relative;
-            z-index: 10; /* Ganz oben! */
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
         }
 
-        .btn-gold-heavy:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px var(--gold);
-            filter: brightness(1.2);
-        }
+        /* METRIKEN */
+        .metric { margin-bottom: 20px; }
+        .metric-label { font-size: 12px; color: #666; text-transform: uppercase; }
+        .metric-value { font-size: 28px; font-weight: 900; }
 
-        .btn-gold-heavy:active {
-            transform: translateY(1px);
-        }
-
-        /* Metrics */
-        .metric-card {
-            margin-bottom: 40px;
-        }
-
-        .metric-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: var(--gold);
-            letter-spacing: 3px;
-            margin-bottom: 10px;
-        }
-
-        .metric-value {
-            font-size: 38px;
-            font-weight: 900;
-            font-style: italic;
-            text-shadow: 0 0 10px var(--gold-glow);
-        }
-
-        /* Terminal Simulation */
-        #console {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: #555;
-            height: 150px;
-            border-top: 1px solid #222;
+        /* KAUF-BUTTONS (Jetzt zu 100% sichtbar und klickbar) */
+        .buy-btn {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+            color: #000;
+            border: none;
             padding: 20px;
-            background: #050505;
+            border-radius: 8px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: auto; /* Drückt den Button immer ans untere Ende des Panels */
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+            text-decoration: none;
+            text-align: center;
         }
 
-        .status-dot {
-            height: 8px;
-            width: 8px;
-            background: #00ff41;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 10px;
-            box-shadow: 0 0 10px #00ff41;
+        .buy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.4);
         }
+
+        /* ZENTRALER BEREICH */
+        .center-panel {
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, #151515 0%, #0a0a0a 100%);
+        }
+
+        .status-circle {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            letter-spacing: 4px;
+            color: var(--gold);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate { 100% { transform: rotate(360deg); } }
 
     </style>
 </head>
 <body>
 
-    <header class="top-nav">
-        <div style="font-weight: 900; font-style: italic; letter-spacing: 2px;">SOVEREIGN <span style="color:var(--gold)">V2.4</span></div>
-        <div style="font-size: 12px; color: #666;">SESSION: <span style="color: var(--gold);">FOUNDER_01</span></div>
+    <header class="top-bar">
+        <div class="logo">SOV<span>ER</span>EIGN</div>
+        <div style="font-size: 12px; color: #888;">STATUS: <span style="color: #00ff41;">SECURE</span></div>
     </header>
 
-    <div class="main-layout">
-        <aside class="panel">
-            <div class="metric-card">
-                <div class="metric-label">Liquidity Index</div>
-                <div class="metric-value">€ 1.48M</div>
-            </div>
-            
-            <div class="metric-card">
-                <div class="metric-label">Efficiency</div>
-                <div class="metric-value">94.2%</div>
-            </div>
-
-            <button class="btn-gold-heavy" onclick="alert('Initiating Sovereign Transaction...')">
-                Scale Capital
-            </button>
-        </aside>
-
-        <main class="panel" style="display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #111 0%, #000 100%);">
-            <div style="text-align: center;">
-                <div style="border: 2px solid var(--gold); padding: 40px; border-radius: 50%; width: 300px; height: 300px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 50px var(--gold-glow);">
-                    <h2 style="font-size: 12px; letter-spacing: 10px; opacity: 0.5;">CORE ACTIVE</h2>
-                </div>
-            </div>
-        </main>
-
-        <aside class="panel">
-            <div class="metric-label" style="margin-bottom: 20px;">System Status</div>
-            <div style="margin-bottom: 15px;"><span class="status-dot"></span> Identity Cloak: ACTIVE</div>
-            <div style="margin-bottom: 15px;"><span class="status-dot"></span> Proxy Matrix: STABLE</div>
-            
-            <hr style="border-color: #222; margin: 30px 0;">
-
-            <button class="btn-gold-heavy" style="background: transparent; border: 1px solid var(--gold); color: var(--gold);" onclick="alert('God Mode is already active.')">
-                God Mode Active
-            </button>
-            
-            <button class="btn-gold-heavy" onclick="window.location.href='index.html'">
-                System Exit
-            </button>
-        </aside>
-    </div>
-
-    <footer id="console">
-        <div>> [SYSTEM] Welcome, Founder. Sovereign Protocol is online.</div>
-        <div id="log-line">> [SEC] Monitoring network traffic... 100% clean.</div>
-    </footer>
-
-    <script>
-        // Kleines Terminal-Script für das Gefühl einer "lebenden" Maschine
-        const log = document.getElementById('log-line');
-        const updates = [
-            "> [ASSET] Bitcoin liquidity node connected.",
-            "> [SEC] Encrypting outgoing data packets...",
-            "> [SYS] Profit-Bot #42 reporting 12% increase.",
-            "> [NET] Secure tunnel established via Singapore."
-        ];
+    <div class="dashboard-grid">
         
-        setInterval(() => {
-            const div = document.createElement('div');
-            div.innerText = updates[Math.floor(Math.random() * updates.length)];
-            document.getElementById('console').appendChild(div);
-            if (document.getElementById('console').childNodes.length > 8) {
-                document.getElementById('console').removeChild(document.getElementById('console').firstChild);
-            }
-        }, 4000);
-    </script>
+        <div class="panel">
+            <h2>Financial Assets</h2>
+            
+            <div class="metric">
+                <div class="metric-label">Current Revenue</div>
+                <div class="metric-value">€ 0.00</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">Active Nodes</div>
+                <div class="metric-value">1</div>
+            </div>
+
+            <a href="DEIN_DIGISTORE_LINK_HIER" class="buy-btn">Node Hinzufügen (99€)</a>
+        </div>
+
+        <div class="panel center-panel">
+            <div class="status-circle">
+                <div style="animation: rotate 20s linear infinite reverse;">SYSTEM ONLINE</div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Protocols</h2>
+            
+            <div class="metric">
+                <div class="metric-label">Identity Protection</div>
+                <div style="color: #00ff41; font-weight: bold; margin-top: 5px;">ACTIVE</div>
+            </div>
+
+            <div class="metric" style="margin-top: 30px;">
+                <div class="metric-label">God Mode Unlocked</div>
+                <div style="color: #666; font-weight: bold; margin-top: 5px;">LOCKED</div>
+            </div>
+
+            <a href="DEIN_DIGISTORE_LINK_HIER" class="buy-btn" style="background: transparent; border: 2px solid var(--gold); color: var(--gold);">
+                Unlock God Mode (499€)
+            </a>
+        </div>
+
+    </div>
 
 </body>
 </html>
