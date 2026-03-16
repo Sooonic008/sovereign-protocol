@@ -1,236 +1,185 @@
 import React, { useState, useEffect } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, query, limit } from 'firebase/firestore';
-
-// --- ICONS ---
-const ShieldCheckIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>;
-const ShoppingCartIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>;
-const ZapIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>;
-const CrownIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"></path></svg>;
-const TrendingUpIcon = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>;
-
-// --- FIREBASE CONFIG ---
-const firebaseConfig = JSON.parse(__firebase_config);
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'sovereign-hq-v2';
+import { 
+  TrendingUp, 
+  Search, 
+  Video, 
+  Users, 
+  DollarSign, 
+  BarChart3, 
+  Zap, 
+  ChevronRight,
+  RefreshCw,
+  Trophy
+} from 'lucide-react';
 
 const App = () => {
-  const [user, setUser] = useState(null);
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [pin, setPin] = useState('');
-  const [loginError, setLoginError] = useState(false);
-  const [activeTab, setActiveTab] = useState('shop');
-  const [transactions, setTransactions] = useState([]);
-  const [stats, setStats] = useState({ totalRevenue: 184350, conversion: 18.4 });
+  const [isScanning, setIsScanning] = useState(false);
+  const [currentTrend, setCurrentTrend] = useState(null);
+  const [followerCount, setFollowerCount] = useState(1240);
+  const [earnings, setEarnings] = useState(42.50);
 
-  // 1. AUTHENTICATION
-  useEffect(() => {
-    const initAuth = async () => {
-      if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-        await signInWithCustomToken(auth, __initial_auth_token);
-      } else {
-        await signInAnonymously(auth);
-      }
-    };
-    initAuth();
-    const unsubscribe = onAuthStateChanged(auth, setUser);
-    return () => unsubscribe();
-  }, []);
+  const topNiches = [
+    { name: "KI Side Hustles", growth: "+145%", cpm: "Hoch", viralPotential: "9/10" },
+    { name: "Deepfake History Narratives", growth: "+88%", cpm: "Mittel", viralPotential: "10/10" },
+    { name: "AI Health Hacks", growth: "+62%", cpm: "Sehr Hoch", viralPotential: "7/10" },
+    { name: "Automatisierte Quiz-Kanäle", growth: "+110%", cpm: "Niedrig", viralPotential: "10/10" },
+    { name: "AI Tech News Updates", growth: "+40%", cpm: "Mittel", viralPotential: "6/10" }
+  ];
 
-  // 2. DATA LISTENER
-  useEffect(() => {
-    if (!user) return;
+  const dailyWorkflow = [
+    { task: "Web-Scraping & Trend-Analyse", status: "Abgeschlossen", tool: "Gemini-2.5-Flash" },
+    { task: "Skript-Generierung (Viral Hooks)", status: "Bereit", tool: "GPT-4" },
+    { task: "Video-Produktion (KI-Avatare)", status: "In Arbeit", tool: "HeyGen / CapCut" },
+    { task: "Multi-Platform Upload", status: "Geplant", tool: "Metricool" }
+  ];
 
-    // Listen for transactions
-    const txCollection = collection(db, 'artifacts', appId, 'public', 'data', 'transactions');
-    const unsubscribeTx = onSnapshot(txCollection, (snapshot) => {
-      const txData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      // In-memory sort by timestamp (Firebase Rule 2: No complex queries)
-      const sorted = txData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-      setTransactions(sorted);
-      
-      // Dynamic stats calculation
-      const revenue = sorted.reduce((acc, curr) => acc + (curr.numericAmount || 0), 184350);
-      setStats(prev => ({ ...prev, totalRevenue: revenue }));
-    }, (err) => console.error("Firestore Error:", err));
-
-    return () => unsubscribeTx();
-  }, [user]);
-
-  const handlePinChange = (e) => {
-    const val = e.target.value;
-    setPin(val);
-    if (val === '2024') {
-      setIsUnlocked(true);
-      setLoginError(false);
-    } else if (val.length === 4) {
-      setLoginError(true);
-      setTimeout(() => { setPin(''); setLoginError(false); }, 800);
-    }
+  const scanTrends = () => {
+    setIsScanning(true);
+    setTimeout(() => {
+      const randomTrend = topNiches[Math.floor(Math.random() * topNiches.length)];
+      setCurrentTrend(randomTrend);
+      setIsScanning(false);
+      setFollowerCount(prev => prev + Math.floor(Math.random() * 200));
+      setEarnings(prev => prev + (Math.random() * 5));
+    }, 2000);
   };
-
-  const handlePurchase = async (planName, amount, numeric) => {
-    if (!user) return;
-    try {
-      const txCollection = collection(db, 'artifacts', appId, 'public', 'data', 'transactions');
-      await addDoc(txCollection, {
-        user: `User_${Math.floor(Math.random() * 9000) + 1000}`,
-        amount: `+ ${amount} €`,
-        numericAmount: numeric,
-        plan: planName,
-        status: 'Verifiziert',
-        timestamp: Date.now()
-      });
-      setActiveTab('dashboard'); // Redirect to show the new entry
-    } catch (e) {
-      console.error("Purchase failed", e);
-    }
-  };
-
-  if (!isUnlocked) {
-    return (
-      <div className="min-h-screen bg-[#020202] text-white flex flex-col items-center justify-center p-6 font-sans">
-        <div className="w-full max-w-md z-10">
-          <div className="text-center mb-10">
-            <h1 className="text-5xl font-black italic tracking-tighter uppercase mb-2">SOV<span className="text-[#d4af37]">ER</span>EIGN</h1>
-            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.5em]">Lighthouse Access Required</p>
-          </div>
-          <div className={`bg-[#0a0a0a] border ${loginError ? 'border-red-500/50' : 'border-[#d4af37]/20'} p-10 rounded-[2.5rem] shadow-2xl transition-all`}>
-            <div className="flex justify-center mb-8"><div className="p-4 rounded-2xl bg-[#d4af37]/5 border border-[#d4af37]/20"><ShieldCheckIcon /></div></div>
-            <input type="password" value={pin} placeholder="PIN" maxLength={4} onChange={handlePinChange} className="w-full bg-black/50 border border-white/10 p-5 rounded-2xl text-center text-4xl tracking-[0.8em] font-black focus:border-[#d4af37] outline-none text-[#d4af37] placeholder:text-zinc-800" autoFocus />
-            {loginError && <p className="text-center text-[10px] font-black text-red-500 uppercase mt-6 tracking-widest animate-pulse">Access Denied</p>}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-[#020202] text-white p-6 md:p-12 font-sans selection:bg-[#d4af37] selection:text-black">
-      <header className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 border-b border-white/5 pb-10">
-        <div>
-          <h1 className="text-4xl font-black italic uppercase tracking-tighter">SOV<span className="text-[#d4af37]">ER</span>EIGN <span className="text-zinc-800 text-2xl ml-2 italic">HQ</span></h1>
-          <p className="text-[10px] text-[#d4af37] font-black uppercase tracking-[0.3em] mt-2 flex items-center gap-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> {user ? 'Cloud Synced' : 'Syncing...'}
-          </p>
-        </div>
-        <div className="flex gap-4 bg-zinc-900/50 p-1.5 rounded-2xl border border-white/5">
-          <button onClick={() => setActiveTab('shop')} className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'shop' ? 'bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/20' : 'text-zinc-500 hover:text-white'}`}><ShoppingCartIcon /> Lizenzen</button>
-          <button onClick={() => setActiveTab('dashboard')} className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'dashboard' ? 'bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/20' : 'text-zinc-500 hover:text-white'}`}>Management</button>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto">
-        {activeTab === 'shop' ? (
+    <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 font-sans">
+      <div className="max-w-5xl mx-auto">
+        
+        {/* Header Section */}
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <div className="text-center mb-16">
-              <h2 className="text-xs font-black uppercase tracking-[0.5em] text-[#d4af37] mb-4">Wähle dein Deployment</h2>
-              <p className="text-3xl font-black italic uppercase tracking-tight">Skaliere dein Imperium</p>
+            <h1 className="text-3xl font-black bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
+              AI CONTENT AUTOMATOR
+            </h1>
+            <p className="text-slate-400 text-sm mt-1">Nischen-Scanner & Follower-Wachstum Dashboard</p>
+          </div>
+          <div className="flex gap-4">
+            <div className="bg-slate-900 border border-slate-800 p-3 rounded-2xl flex items-center gap-3">
+              <Users className="text-blue-400" size={20} />
+              <div>
+                <p className="text-[10px] uppercase text-slate-500 font-bold">Follower</p>
+                <p className="font-mono text-xl">{followerCount.toLocaleString()}</p>
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-              {/* CORE */}
-              <div className="bg-[#080808] border border-white/5 p-10 rounded-[3rem] flex flex-col transition-all hover:border-[#d4af37]/30">
-                <div className="mb-8">
-                  <h3 className="text-xl font-black italic uppercase tracking-tighter text-zinc-400">Core Node</h3>
-                  <div className="mt-4"><span className="text-5xl font-black italic text-white">997€</span></div>
-                </div>
-                <ul className="space-y-4 mb-10 flex-grow">
-                  {['Single Data Center', 'Standard Encryption', '99.9% Uptime'].map(f => (
-                    <li key={f} className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 border border-[#d4af37] rounded-full"></div> {f}
-                    </li>
-                  ))}
-                </ul>
-                <button onClick={() => handlePurchase('Core Node', '997', 997)} className="w-full py-5 bg-white/5 border border-white/10 text-white font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl hover:bg-white hover:text-black transition-all">
-                  Jetzt Kaufen
-                </button>
-              </div>
-
-              {/* PRO */}
-              <div className="bg-[#0c0c0c] border-2 border-[#d4af37] p-10 rounded-[3rem] relative flex flex-col transform scale-105 shadow-2xl shadow-[#d4af37]/10 z-10">
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#d4af37] text-black px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl">Most Popular</div>
-                <div className="mb-8">
-                  <div className="flex justify-between items-center"><h3 className="text-2xl font-black italic uppercase tracking-tighter text-[#d4af37]">Sovereign Pro</h3><ZapIcon /></div>
-                  <div className="mt-4"><span className="text-6xl font-black italic text-white">2.997€</span></div>
-                </div>
-                <ul className="space-y-4 mb-10 flex-grow">
-                  {['Global Node Network', 'Military-Grade Shield', 'Priority AI'].map(f => (
-                    <li key={f} className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 bg-[#d4af37] rounded-full"></div> {f}
-                    </li>
-                  ))}
-                </ul>
-                <button onClick={() => handlePurchase('Sovereign Pro', '2.997', 2997)} className="w-full py-6 bg-[#d4af37] text-black font-black uppercase text-[12px] tracking-[0.3em] rounded-2xl hover:bg-white transition-all shadow-lg shadow-[#d4af37]/30">
-                  Upgrade auf Pro
-                </button>
-              </div>
-
-              {/* ENTERPRISE */}
-              <div className="bg-[#080808] border border-white/5 p-10 rounded-[3rem] flex flex-col transition-all hover:border-[#d4af37]/30">
-                <div className="mb-8">
-                  <div className="flex justify-between items-center"><h3 className="text-xl font-black italic uppercase tracking-tighter text-zinc-400">Enterprise Elite</h3><CrownIcon /></div>
-                  <div className="mt-4"><span className="text-5xl font-black italic text-white">5.997€</span></div>
-                </div>
-                <ul className="space-y-4 mb-10 flex-grow">
-                  {['Dedicated Hardware', 'Lighthouse Protocol', 'White-Label'].map(f => (
-                    <li key={f} className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 border border-white/20 rounded-full"></div> {f}
-                    </li>
-                  ))}
-                </ul>
-                <button onClick={() => handlePurchase('Enterprise Elite', '5.997', 5997)} className="w-full py-5 bg-white/5 border border-white/10 text-white font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl hover:bg-[#d4af37] hover:text-black transition-all">
-                  Elite Sichern
-                </button>
+            <div className="bg-slate-900 border border-slate-800 p-3 rounded-2xl flex items-center gap-3">
+              <DollarSign className="text-emerald-400" size={20} />
+              <div>
+                <p className="text-[10px] uppercase text-slate-500 font-bold">Einnahmen</p>
+                <p className="font-mono text-xl">{earnings.toFixed(2)} €</p>
               </div>
             </div>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-[#080808] border border-white/5 p-8 rounded-[2.5rem]">
-              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4">Total Revenue MRR</p>
-              <h2 className="text-5xl font-black text-[#d4af37] italic tracking-tighter">€ {stats.totalRevenue.toLocaleString()}</h2>
-              <div className="mt-6 flex items-center gap-2 text-green-500 text-[10px] font-bold"><TrendingUpIcon /> +24% LIVE</div>
-            </div>
-            
-            <div className="bg-[#080808] border border-white/5 p-8 rounded-[2.5rem]">
-              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4">Conversion Rate</p>
-              <h2 className="text-5xl font-black italic tracking-tighter text-white">{stats.conversion}%</h2>
-              <p className="mt-6 text-[9px] text-zinc-600 uppercase font-black tracking-widest">Optimized for High Ticket</p>
-            </div>
+        </header>
 
-            <div className="bg-[#080808] border border-white/5 p-8 rounded-[2.5rem] flex flex-col justify-center items-center">
-              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Network ID</p>
-              <p className="text-[10px] text-zinc-400 font-mono truncate w-full text-center">{user?.uid || 'CONNECTING...'}</p>
-            </div>
-            
-            <div className="md:col-span-3 bg-[#080808] border border-white/5 rounded-[3rem] p-12 mt-4">
-               <h3 className="text-xs font-black uppercase tracking-[0.5em] text-[#d4af37] mb-8 italic">Cloud Database Feed</h3>
-               <div className="space-y-3">
-                 {transactions.length > 0 ? transactions.map((t, i) => (
-                   <div key={t.id || i} className="flex items-center justify-between p-6 bg-black/40 border border-white/5 rounded-3xl group hover:border-[#d4af37]/40 transition-all">
-                     <div className="flex items-center gap-6">
-                       <div className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-green-500 animate-pulse' : 'bg-zinc-800'}`}></div>
-                       <div className="flex flex-col">
-                         <span className="text-sm font-black uppercase tracking-widest">{t.user}</span>
-                         <span className="text-[9px] text-zinc-600 uppercase font-bold tracking-tighter">{t.status} • {new Date(t.timestamp).toLocaleTimeString()}</span>
-                       </div>
-                     </div>
-                     <div className="text-right">
-                       <span className="text-lg font-black text-white italic block">{t.amount}</span>
-                       <span className="text-[8px] border border-[#d4af37]/30 text-[#d4af37] px-3 py-1 rounded-full uppercase font-black tracking-widest mt-1 inline-block">{t.plan}</span>
-                     </div>
-                   </div>
-                 )) : (
-                   <div className="p-12 text-center text-zinc-700 font-black uppercase tracking-widest text-xs">Waiting for first Cloud Transaction...</div>
-                 )}
-               </div>
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* Trend Analysis Section */}
+          <div className="lg:col-span-2 space-y-6">
+            <section className="bg-slate-900/50 border border-slate-800 rounded-3xl p-6 backdrop-blur-sm">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg font-bold flex items-center gap-2">
+                  <Search size={20} className="text-purple-400" /> Top 5 Nischen heute
+                </h2>
+                <button 
+                  onClick={scanTrends}
+                  disabled={isScanning}
+                  className="bg-purple-600 hover:bg-purple-500 text-white text-xs px-4 py-2 rounded-full font-bold transition-all flex items-center gap-2"
+                >
+                  {isScanning ? <RefreshCw size={14} className="animate-spin" /> : <Zap size={14} />}
+                  WEB DURCHFORSTEN
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {topNiches.map((niche, idx) => (
+                  <div key={idx} className="group bg-slate-900 border border-white/5 p-4 rounded-2xl flex justify-between items-center hover:border-purple-500/50 transition-all cursor-pointer">
+                    <div className="flex items-center gap-4">
+                      <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">
+                        #{idx + 1}
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-sm">{niche.name}</h3>
+                        <p className="text-[10px] text-slate-500 uppercase">Wachstum: <span className="text-emerald-400">{niche.growth}</span></p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] text-slate-500 uppercase mb-1">Viralität</p>
+                      <div className="w-20 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-purple-500" 
+                          style={{ width: `${parseInt(niche.viralPotential) * 10}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {currentTrend && (
+              <section className="animate-in fade-in slide-in-from-bottom-4 duration-500 bg-gradient-to-br from-purple-900/20 to-blue-900/20 border border-purple-500/30 rounded-3xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <Trophy className="text-yellow-400" size={24} />
+                  <h2 className="text-lg font-bold">Empfohlener Video-Typ für heute</h2>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-black/30 p-4 rounded-xl border border-white/5">
+                    <p className="text-[10px] uppercase text-slate-400 mb-1">Hook</p>
+                    <p className="text-xs font-medium italic text-purple-200">"Hör auf, für 12€ die Stunde zu arbeiten. Mach DAS mit KI..."</p>
+                  </div>
+                  <div className="bg-black/30 p-4 rounded-xl border border-white/5">
+                    <p className="text-[10px] uppercase text-slate-400 mb-1">Nische</p>
+                    <p className="text-xs font-bold text-white">{currentTrend.name}</p>
+                  </div>
+                </div>
+              </section>
+            )}
           </div>
-        )}
-      </main>
+
+          {/* Workflow & Sidebar */}
+          <div className="space-y-6">
+            <section className="bg-slate-900 border border-slate-800 rounded-3xl p-6">
+              <h2 className="text-sm font-black uppercase mb-6 flex items-center gap-2 tracking-widest text-slate-400">
+                <BarChart3 size={16} /> Workflow Status
+              </h2>
+              <div className="space-y-6">
+                {dailyWorkflow.map((step, idx) => (
+                  <div key={idx} className="relative pl-6 border-l border-slate-800 pb-2">
+                    <div className={`absolute -left-1.5 top-0 w-3 h-3 rounded-full border-2 border-slate-950 ${
+                      step.status === 'Abgeschlossen' ? 'bg-emerald-500' : step.status === 'In Arbeit' ? 'bg-blue-500' : 'bg-slate-700'
+                    }`}></div>
+                    <h4 className="text-xs font-bold text-slate-200">{step.task}</h4>
+                    <p className="text-[10px] text-slate-500 mt-1">Tool: {step.tool}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="bg-emerald-500/10 border border-emerald-500/20 rounded-3xl p-6">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="p-2 bg-emerald-500 rounded-lg">
+                  <Video size={18} className="text-black" />
+                </div>
+                <h3 className="font-bold text-sm text-emerald-400">KI Posting Plan</h3>
+              </div>
+              <p className="text-[11px] text-slate-400 leading-relaxed mb-4">
+                Poste 3x täglich:
+                <br />• 09:00 Uhr: Viral Hook (Problem)
+                <br />• 15:00 Uhr: KI-Lösung (Value)
+                <br />• 20:00 Uhr: CTA (Link in Bio)
+              </p>
+              <div className="bg-black/20 p-3 rounded-xl border border-emerald-500/10">
+                <p className="text-[10px] text-emerald-400 font-bold uppercase">Prognose</p>
+                <p className="text-xs text-slate-300">10k Follower in ca. 35 Tagen möglich.</p>
+              </div>
+            </section>
+          </div>
+
+        </div>
+      </div>
     </div>
   );
 };
