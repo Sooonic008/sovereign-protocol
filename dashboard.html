@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sovereign Admin Panel | Dashboard</title>
+    <!-- Tailwind CSS mit Fallback-Check -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
+        /* Fallback Styles falls Tailwind nicht sofort lädt */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
@@ -14,6 +16,7 @@
             background-color: #050505; 
             color: #ffffff;
             overflow-x: hidden;
+            line-height: 1.5;
         }
 
         .gold-gradient { 
@@ -24,21 +27,23 @@
 
         .gold-bg {
             background: linear-gradient(135deg, #C5A021 0%, #D4AF37 100%);
+            border: none;
+            cursor: pointer;
         }
 
-        /* Glassmorphism Effect */
+        /* Glassmorphism Design */
         .glass-card {
-            background: rgba(15, 15, 15, 0.7);
+            background: rgba(15, 15, 15, 0.8);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.1);
-            border-radius: 28px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 24px;
+            transition: all 0.3s ease;
         }
 
         .glass-card:hover {
             border-color: rgba(212, 175, 55, 0.4);
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            transform: translateY(-4px);
         }
 
         .status-dot {
@@ -47,13 +52,13 @@
             background: #22c55e;
             border-radius: 50%;
             display: inline-block;
-            box-shadow: 0 0 15px #22c55e;
+            box-shadow: 0 0 10px #22c55e;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
             0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 0.5; }
+            50% { transform: scale(1.4); opacity: 0.6; }
             100% { transform: scale(1); opacity: 1; }
         }
 
@@ -61,12 +66,13 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 20px;
-            color: #666;
+            padding: 12px 16px;
+            color: #71717a;
             border-radius: 12px;
             font-size: 14px;
             font-weight: 600;
-            transition: 0.3s;
+            text-decoration: none;
+            transition: 0.2s;
         }
 
         .sidebar-link:hover, .sidebar-link.active {
@@ -74,138 +80,132 @@
             color: #D4AF37;
         }
 
-        .gradient-border {
-            position: relative;
-            background: #050505;
-            border-radius: 28px;
-        }
-
-        .gradient-border::before {
-            content: "";
-            position: absolute;
-            inset: -1px;
-            background: linear-gradient(135deg, rgba(197, 160, 33, 0.5), transparent, rgba(184, 134, 11, 0.5));
-            border-radius: 29px;
-            z-index: -1;
+        /* Verhindert das "Zerreisen" auf kleinen Bildschirmen */
+        @media (max-width: 1024px) {
+            .sidebar-hide { display: none; }
         }
     </style>
 </head>
 <body class="antialiased min-h-screen">
 
-    <!-- NAVIGATION -->
-    <nav class="max-w-[1400px] mx-auto flex justify-between items-center px-8 py-6">
-        <div class="text-2xl font-800 tracking-tighter uppercase italic">
-            SOV<span class="gold-gradient">ER</span>EIGN
-        </div>
-        <div class="flex items-center gap-6">
-            <div class="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/5">
-                <span class="status-dot"></span>
-                <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Node: Frankfurt-01</span>
+    <!-- HEADER NAVIGATION -->
+    <nav class="w-full border-b border-white/5 bg-black/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-[1400px] mx-auto flex justify-between items-center px-6 py-5">
+            <div class="text-xl font-800 tracking-tighter uppercase italic">
+                SOV<span class="gold-gradient">ER</span>EIGN
             </div>
-            <a href="index.html" class="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 hover:text-white transition">Beenden</a>
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/5">
+                    <span class="status-dot"></span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">System: Online</span>
+                </div>
+                <a href="index.html" class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition no-underline border border-white/10 px-4 py-2 rounded-lg">Logout</a>
+            </div>
         </div>
     </nav>
 
-    <main class="max-w-[1400px] mx-auto px-8 py-10">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+    <main class="max-w-[1400px] mx-auto px-6 py-10">
+        <div class="flex flex-col lg:flex-row gap-10">
             
-            <!-- SIDEBAR -->
-            <aside class="lg:col-span-3 space-y-2">
-                <div class="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] mb-4 pl-4">Imperium</div>
+            <!-- SIDEBAR (Links) -->
+            <aside class="w-full lg:w-64 flex-shrink-0 space-y-1">
+                <div class="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] mb-4 ml-4">Zentrale</div>
                 <a href="#" class="sidebar-link active">Dashboard</a>
-                <a href="#" class="sidebar-link">Cloud Assets</a>
-                <a href="#" class="sidebar-link">Sicherheit</a>
-                <a href="#" class="sidebar-link">Finanzen</a>
-                <div class="pt-8 text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] mb-4 pl-4">Account</div>
-                <a href="#" class="sidebar-link">Profile Settings</a>
-                <a href="#" class="sidebar-link text-red-900/50 hover:text-red-500">System Lock</a>
+                <a href="#" class="sidebar-link text-zinc-500">Cloud Assets</a>
+                <a href="#" class="sidebar-link text-zinc-500">Security Core</a>
+                <div class="pt-8 text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] mb-4 ml-4">Account</div>
+                <a href="#" class="sidebar-link text-zinc-500">Einstellungen</a>
+                <a href="#" class="sidebar-link text-red-900/40 hover:text-red-500">System Sperren</a>
             </aside>
 
-            <!-- MAIN CONTENT -->
-            <div class="lg:col-span-9">
-                <header class="mb-12">
-                    <h1 class="text-5xl font-800 italic uppercase mb-2">System <span class="gold-gradient">Übersicht</span></h1>
-                    <p class="text-zinc-500 font-medium">Willkommen zurück, Commander. Alle Protokolle laufen nominal.</p>
+            <!-- MAIN CONTENT AREA -->
+            <div class="flex-grow">
+                <header class="mb-10">
+                    <h1 class="text-4xl md:text-5xl font-800 italic uppercase mb-2">Admin <span class="gold-gradient">Dashboard</span></h1>
+                    <p class="text-zinc-500 font-medium">Sitzung aktiv. Alle Verschlüsselungsprotokolle sind stabil.</p>
                 </header>
 
-                <!-- STATS -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <div class="glass-card p-8">
-                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-4">Uptime</p>
-                        <h3 class="text-3xl font-bold italic">99.99<span class="text-zinc-700">%</span></h3>
+                <!-- TOP STATS GRID -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+                    <div class="glass-card p-6">
+                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-3">Netzwerk Status</p>
+                        <h3 class="text-2xl font-bold italic">Stabil <span class="text-green-500 text-sm ml-2">●</span></h3>
                     </div>
-                    <div class="glass-card p-8">
-                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-4">Sicherheitslevel</p>
-                        <h3 class="text-3xl font-bold italic gold-gradient">MAXIMAL</h3>
+                    <div class="glass-card p-6">
+                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-3">Sicherheitslevel</p>
+                        <h3 class="text-2xl font-bold italic gold-gradient">PROTOKOLL X</h3>
                     </div>
-                    <div class="glass-card p-8">
-                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-4">Verschlüsselung</p>
-                        <h3 class="text-3xl font-bold italic">AES-256</h3>
+                    <div class="glass-card p-6">
+                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-3">Aktive Nodes</p>
+                        <h3 class="text-2xl font-bold italic">Global</h3>
                     </div>
                 </div>
 
-                <!-- ASSETS LIST -->
+                <!-- DOWNLOADS / ASSETS SECTION -->
                 <div class="glass-card overflow-hidden">
-                    <div class="p-8 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
-                        <h2 class="text-lg font-bold italic uppercase tracking-tight">Strategische Assets</h2>
-                        <button class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Alle anzeigen</button>
+                    <div class="p-6 border-b border-white/5 flex justify-between items-center">
+                        <h2 class="text-sm font-bold italic uppercase tracking-widest text-[#D4AF37]">Verfügbare Assets</h2>
+                        <span class="text-[9px] font-bold text-zinc-600 bg-white/5 px-2 py-1 rounded">2 Neue</span>
                     </div>
                     
                     <div class="divide-y divide-white/5">
-                        <div class="p-6 flex items-center justify-between hover:bg-white/[0.03] transition group">
-                            <div class="flex items-center gap-5">
-                                <div class="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center border border-white/5 group-hover:border-[#D4AF37]/50 transition">
-                                    <span class="text-lg">📄</span>
-                                </div>
+                        <!-- Asset Item 1 -->
+                        <div class="p-5 flex items-center justify-between hover:bg-white/[0.02] transition">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-zinc-900 flex items-center justify-center border border-white/5 text-lg">📄</div>
                                 <div>
-                                    <p class="font-bold text-sm tracking-tight">Email Sequence Blueprint</p>
-                                    <p class="text-[10px] text-zinc-600 uppercase font-bold">PDF Document • 4.2 MB</p>
+                                    <p class="font-bold text-sm">Sovereign Blueprint v2</p>
+                                    <p class="text-[10px] text-zinc-600 uppercase font-bold">PDF Masterfile</p>
                                 </div>
                             </div>
-                            <button class="gold-bg text-black px-6 py-2 rounded-lg font-black text-[10px] uppercase hover:scale-105 transition">Laden</button>
+                            <button class="gold-bg text-black px-5 py-2 rounded-lg font-black text-[10px] uppercase hover:opacity-90 transition">Download</button>
                         </div>
 
-                        <div class="p-6 flex items-center justify-between hover:bg-white/[0.03] transition group">
-                            <div class="flex items-center gap-5">
-                                <div class="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center border border-white/5 group-hover:border-[#D4AF37]/50 transition">
-                                    <span class="text-lg">📦</span>
-                                </div>
+                        <!-- Asset Item 2 -->
+                        <div class="p-5 flex items-center justify-between hover:bg-white/[0.02] transition">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-zinc-900 flex items-center justify-center border border-white/5 text-lg">📦</div>
                                 <div>
-                                    <p class="font-bold text-sm tracking-tight">SaaS Framework Core Files</p>
-                                    <p class="text-[10px] text-zinc-600 uppercase font-bold">ZIP Archive • 128 MB</p>
+                                    <p class="font-bold text-sm">Tech-Stack Deployment</p>
+                                    <p class="text-[10px] text-zinc-600 uppercase font-bold">ZIP Archiv • 45MB</p>
                                 </div>
                             </div>
-                            <button class="gold-bg text-black px-6 py-2 rounded-lg font-black text-[10px] uppercase hover:scale-105 transition">Laden</button>
+                            <button class="gold-bg text-black px-5 py-2 rounded-lg font-black text-[10px] uppercase hover:opacity-90 transition">Download</button>
                         </div>
 
-                        <div class="p-6 flex items-center justify-between opacity-40 grayscale group">
-                            <div class="flex items-center gap-5">
-                                <div class="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center border border-white/5">
-                                    <span class="text-lg">🔒</span>
-                                </div>
+                        <!-- Locked Asset -->
+                        <div class="p-5 flex items-center justify-between opacity-30 cursor-not-allowed">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-zinc-950 flex items-center justify-center border border-white/5 text-lg">🔒</div>
                                 <div>
-                                    <p class="font-bold text-sm tracking-tight italic">Shadow VSL Integration</p>
-                                    <p class="text-[10px] text-zinc-600 uppercase font-bold">Gott-Modus erforderlich</p>
+                                    <p class="font-bold text-sm italic">Shadow VSL Add-on</p>
+                                    <p class="text-[10px] text-zinc-700 uppercase font-bold">Gott-Modus erforderlich</p>
                                 </div>
                             </div>
-                            <div class="text-[10px] font-black text-zinc-700 uppercase tracking-widest">Locked</div>
+                            <span class="text-[9px] font-black text-zinc-700 uppercase tracking-widest mr-4">Gesperrt</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-12 p-10 rounded-[40px] bg-gradient-to-r from-[#D4AF37]/10 to-transparent border border-[#D4AF37]/20">
-                    <h4 class="text-sm font-black uppercase tracking-widest text-[#D4AF37] mb-2">Expertentipp</h4>
-                    <p class="text-zinc-400 text-sm leading-relaxed">
-                        Nutze das <span class="text-white font-bold italic">Sovereign Financial Stack</span> Modul, um deine Auszahlungen über verschiedene Gateways zu splitten und maximale finanzielle Sicherheit zu gewährleisten.
-                    </p>
+                <!-- ADVICE BOX -->
+                <div class="mt-8 p-8 rounded-3xl bg-gradient-to-r from-[#D4AF37]/5 to-transparent border border-[#D4AF37]/10">
+                    <div class="flex items-start gap-4">
+                        <div class="text-[#D4AF37] text-xl">💡</div>
+                        <div>
+                            <h4 class="text-xs font-black uppercase tracking-widest text-[#D4AF37] mb-1">Commander Hinweis</h4>
+                            <p class="text-zinc-400 text-xs leading-relaxed max-w-xl">
+                                Dein System ist aktuell auf dem neuesten Stand. Vergiss nicht, deine Backups wöchentlich zu validieren, um die volle Souveränität über deine Kundendaten zu behalten.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </div>
     </main>
 
-    <footer class="mt-20 py-12 border-t border-white/5 text-center">
-        <p class="text-[10px] font-bold text-zinc-800 uppercase tracking-[0.6em]">Sovereign Protocol &copy; Security Session Active</p>
+    <footer class="mt-20 py-10 border-t border-white/5 text-center">
+        <p class="text-[9px] font-bold text-zinc-700 uppercase tracking-[0.5em]">Sovereign Protocol &copy; 2024 • Alle Rechte Vorbehalten</p>
     </footer>
 
 </body>
