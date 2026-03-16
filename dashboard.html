@@ -1,203 +1,172 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sovereign Command | Founder Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Urbanist', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
-        .gold-gradient { background: linear-gradient(135deg, #C5A021 0%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-card { background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(212, 175, 55, 0.1); border-radius: 24px; transition: all 0.3s ease; }
-        .glass-card:hover { border-color: rgba(212, 175, 55, 0.3); transform: translateY(-2px); }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
-        .status-online { background: #10b981; box-shadow: 0 0 10px #10b981; }
-        
-        /* Loading Bar Animation */
-        .progress-bar { width: 0%; height: 2px; background: #D4AF37; transition: width 2s ease-in-out; }
-        
-        .notification-toast {
-            position: fixed; bottom: 30px; right: 30px; 
-            background: #D4AF37; color: black; padding: 20px 30px;
-            border-radius: 15px; font-weight: 900; text-transform: uppercase;
-            letter-spacing: 1px; display: none; z-index: 1000;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-    </style>
-</head>
-<body class="antialiased min-h-screen">
+import React, { useState, useEffect } from 'react';
 
-    <div id="toast" class="notification-toast italic">Verschlüsselter Download gestartet...</div>
+const App = () => {
+  const [timeLeft, setTimeLeft] = useState(15 * 60);
 
-    <!-- Top Navigation -->
-    <nav class="border-b border-white/5 bg-black/60 backdrop-blur-xl sticky top-0 z-50">
-        <div class="max-w-[1600px] mx-auto flex justify-between items-center px-8 py-4">
-            <div class="flex items-center gap-4">
-                <div class="text-xl font-800 italic uppercase tracking-tighter">SOV<span class="gold-gradient">ER</span>EIGN</div>
-                <div class="h-4 w-[1px] bg-white/10 mx-2"></div>
-                <div class="flex items-center text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                    <span class="status-dot status-online"></span> System Online
-                </div>
-            </div>
-            <div class="flex items-center gap-6">
-                <div class="text-right hidden sm:block">
-                    <p class="text-[10px] text-zinc-500 font-bold uppercase">Account Status</p>
-                    <p class="text-xs font-black gold-gradient">GOTT-MODUS AKTIV</p>
-                </div>
-                <a href="index.html" class="bg-white/5 hover:bg-white/10 px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition border border-white/5">Logout</a>
-            </div>
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (seconds) => {
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+  };
+
+  const redirectToDigistore = (planKey) => {
+    const config = {
+      vendorId: "sooonic008",
+      products: {
+        elite: "676462",
+        god: "676464"
+      }
+    };
+    const productId = config.products[planKey];
+    const checkoutUrl = `https://www.digistore24.com/product/${productId}?vendor=${config.vendorId}`;
+    window.open(checkoutUrl, '_blank');
+  };
+
+  const scrollToPricing = () => {
+    const element = document.getElementById('pricing');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <div className="bg-[#050505] text-white min-h-screen font-['Urbanist'] antialiased selection:bg-[#D4AF37] selection:text-black">
+      {/* NAVIGATION */}
+      <nav className="max-w-7xl mx-auto flex justify-between items-center px-6 py-8 border-b border-zinc-900/50 sticky top-0 bg-black/50 backdrop-blur-md z-[100]">
+        <div className="text-2xl font-extrabold tracking-tighter uppercase">
+          SOV<span className="bg-gradient-to-r from-[#C5A021] via-[#D4AF37] to-[#B8860B] bg-clip-text text-transparent italic">ER</span>EIGN
         </div>
-    </nav>
+        <div className="hidden lg:flex gap-10 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
+          <button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} className="hover:text-white transition uppercase">Vision</button>
+          <button onClick={scrollToPricing} className="hover:text-white transition uppercase">Protokoll</button>
+          <button onClick={scrollToPricing} className="hover:text-white transition uppercase">Preise</button>
+        </div>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={scrollToPricing}
+            className="bg-gradient-to-r from-[#C5A021] to-[#D4AF37] text-black px-8 py-2.5 rounded-full font-bold text-xs hover:scale-105 transition active:scale-95 shadow-lg shadow-yellow-900/20"
+          >
+            JETZT STARTEN
+          </button>
+        </div>
+      </nav>
 
-    <main class="max-w-[1600px] mx-auto px-8 py-12">
+      {/* HERO SECTION */}
+      <header className="max-w-6xl mx-auto px-6 mb-24 pt-20 text-center relative">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#C5A021]/10 blur-[120px] rounded-full -z-10"></div>
         
-        <!-- Stats Row -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            <div class="glass-card p-6">
-                <p class="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Global Revenue (SaaS)</p>
-                <h3 class="text-3xl font-800 italic">128.402 €</h3>
-                <p class="text-[10px] text-emerald-500 font-bold mt-2">+12.4% vs last month</p>
-            </div>
-            <div class="glass-card p-6">
-                <p class="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Active Instances</p>
-                <h3 class="text-3xl font-800 italic">14 / 20</h3>
-                <div class="w-full bg-white/5 h-1 mt-4 rounded-full overflow-hidden">
-                    <div class="bg-[#D4AF37] h-full w-[70%]"></div>
-                </div>
-            </div>
-            <div class="glass-card p-6">
-                <p class="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Database Sync</p>
-                <h3 class="text-3xl font-800 italic text-emerald-500">OPTIMAL</h3>
-                <p class="text-[10px] text-zinc-500 font-bold mt-2">Latency: 14ms</p>
-            </div>
-            <div class="glass-card p-6">
-                <p class="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">System Version</p>
-                <h3 class="text-3xl font-800 italic gold-gradient">v2.4.9-ELITE</h3>
-                <p class="text-[10px] text-zinc-500 font-bold mt-2">Letztes Update: Heute</p>
-            </div>
+        <div className="inline-flex items-center gap-2 px-5 py-2 mb-8 border border-[#C5A021]/30 rounded-full text-[#C5A021] text-xs font-bold tracking-[0.1em] uppercase bg-[#C5A021]/5">
+          <span className="w-2 h-2 bg-[#C5A021] rounded-full animate-pulse"></span>
+          Angebot endet in: {formatTime(timeLeft)}
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            <!-- Sidebar -->
-            <div class="lg:col-span-3 space-y-6">
-                <div class="glass-card p-8">
-                    <h4 class="text-xs font-black uppercase tracking-[0.3em] text-zinc-600 mb-6">Navigation</h4>
-                    <nav class="space-y-2">
-                        <button class="w-full text-left px-4 py-3 rounded-xl bg-[#D4AF37] text-black font-black text-xs uppercase italic tracking-widest">Master Assets</button>
-                        <button onclick="alert('Infrastruktur-Manager lädt...')" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-zinc-400 font-black text-xs uppercase italic tracking-widest transition">Cloud Deploy</button>
-                        <button onclick="alert('Marketing-Suite wird initialisiert...')" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-zinc-400 font-black text-xs uppercase italic tracking-widest transition">Sales Tracker</button>
-                        <button onclick="alert('Support-Channel öffnet...')" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-zinc-400 font-black text-xs uppercase italic tracking-widest transition">Expert Support</button>
-                    </nav>
-                </div>
-
-                <div class="glass-card p-8 border-[#D4AF37]/30">
-                    <h4 class="text-xs font-black uppercase tracking-[0.3em] text-[#D4AF37] mb-4">Gott-Modus Support</h4>
-                    <p class="text-xs text-zinc-400 leading-relaxed mb-6">Dein persönlicher Strategie-Berater ist online. Reaktionszeit: &lt; 15 Min.</p>
-                    <button class="w-full border border-[#D4AF37]/40 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#D4AF37] hover:text-black transition">Slack öffnen</button>
-                </div>
-            </div>
-
-            <!-- Main Content Area -->
-            <div class="lg:col-span-9 space-y-6">
-                
-                <h2 class="text-xs font-black uppercase tracking-[0.4em] text-zinc-600 mb-2">Verfügbare Assets</h2>
-
-                <!-- Asset Item 1 -->
-                <div class="glass-card p-8 group">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div class="flex items-center gap-6">
-                            <div class="w-16 h-16 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center text-3xl group-hover:scale-110 transition duration-500">💎</div>
-                            <div>
-                                <h3 class="text-xl font-800 italic uppercase">Sovereign SaaS Core (White-Label)</h3>
-                                <p class="text-xs text-zinc-500 mt-1">Die komplette Software-Infrastruktur. Ready for Rebranding.</p>
-                                <div class="flex gap-4 mt-3">
-                                    <span class="text-[9px] font-black text-[#D4AF37] uppercase bg-[#D4AF37]/10 px-2 py-1 rounded">Build 2024.4</span>
-                                    <span class="text-[9px] font-black text-zinc-500 uppercase bg-white/5 px-2 py-1 rounded">Size: 1.2 GB</span>
-                                </div>
-                            </div>
-                        </div>
-                        <button onclick="simulateDownload(this, 'SaaS Core')" class="bg-[#D4AF37] text-black px-10 py-4 rounded-2xl font-black text-xs uppercase italic tracking-widest hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition active:scale-95">Download starten</button>
-                    </div>
-                    <div class="mt-6 hidden download-progress-container">
-                        <div class="flex justify-between text-[10px] font-black uppercase mb-2">
-                            <span class="text-zinc-500 italic">Verschlüsselung wird aufgebaut...</span>
-                            <span class="gold-gradient percent-text">0%</span>
-                        </div>
-                        <div class="w-full bg-white/5 h-[2px] rounded-full">
-                            <div class="progress-bar"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Asset Item 2 -->
-                <div class="glass-card p-8 group">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div class="flex items-center gap-6">
-                            <div class="w-16 h-16 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center text-3xl group-hover:scale-110 transition duration-500">📄</div>
-                            <div>
-                                <h3 class="text-xl font-800 italic uppercase">The Sovereign Blueprint (PDF)</h3>
-                                <p class="text-xs text-zinc-500 mt-1">Vollständiges Playbook: Von 0 auf 100k Monthly Recurring Revenue.</p>
-                            </div>
-                        </div>
-                        <button onclick="simulateDownload(this, 'Blueprint')" class="bg-white/5 border border-white/10 text-white px-10 py-4 rounded-2xl font-black text-xs uppercase italic tracking-widest hover:bg-white/10 transition active:scale-95">Download PDF</button>
-                    </div>
-                    <div class="mt-6 hidden download-progress-container">
-                        <div class="flex justify-between text-[10px] font-black uppercase mb-2">
-                            <span class="text-zinc-500 italic">Analysiere Berechtigung...</span>
-                            <span class="gold-gradient percent-text">0%</span>
-                        </div>
-                        <div class="w-full bg-white/5 h-[2px] rounded-full">
-                            <div class="progress-bar"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Shadow VSL Section -->
-                <div class="glass-card p-10 bg-gradient-to-r from-[#D4AF37]/10 to-transparent border-[#D4AF37]/20 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-8 opacity-5 text-8xl">👑</div>
-                    <h3 class="text-2xl font-800 italic uppercase mb-4 gold-gradient">Shadow VSL Assets</h3>
-                    <p class="text-zinc-400 text-sm max-w-xl mb-8 leading-relaxed">Diese Video-Assets sind exklusiv für Gott-Modus Nutzer. Sie enthalten die High-Conversion Skripte, die wir intern nutzen, um 5-stellige Abschlüsse zu erzielen.</p>
-                    <button onclick="alert('Dein persönliches Video-Paket wird gerade von unseren Editoren finalisiert. Verfügbar in ca. 24h.')" class="gold-gradient border border-[#D4AF37]/40 px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-[#D4AF37] hover:text-black transition">Paket anfordern</button>
-                </div>
-
-            </div>
+        <h1 className="text-6xl md:text-8xl font-extrabold mb-8 leading-[0.95] tracking-tighter uppercase">
+          BUILD YOUR <br />
+          <span className="bg-gradient-to-r from-[#C5A021] via-[#D4AF37] to-[#B8860B] bg-clip-text text-transparent italic">DIGITAL EMPIRE</span>
+        </h1>
+        
+        <p className="text-lg md:text-2xl text-gray-400 max-w-3xl mx-auto mb-12 font-medium">
+          Hör auf, für Träume anderer zu arbeiten. Wir bauen dein High-Ticket SaaS Business – ein digitales Imperium mit echtem Substanzwert.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row justify-center gap-5 mb-24 relative z-10">
+          <button 
+            onClick={scrollToPricing}
+            className="bg-gradient-to-r from-[#C5A021] to-[#D4AF37] text-black px-12 py-5 rounded-2xl font-bold text-xl hover:shadow-[0_0_40px_rgba(197,160,33,0.3)] transition active:scale-95 uppercase italic"
+          >
+            Protokoll sichern
+          </button>
+          <button 
+            onClick={scrollToPricing}
+            className="bg-white/5 border border-white/10 px-12 py-5 rounded-2xl font-bold text-xl hover:bg-white/10 transition active:scale-95 flex items-center justify-center uppercase italic"
+          >
+            Was ist ein Imperium?
+          </button>
         </div>
-    </main>
+      </header>
 
-    <script>
-        function simulateDownload(btn, name) {
-            const container = btn.closest('.glass-card').querySelector('.download-progress-container');
-            const bar = container.querySelector('.progress-bar');
-            const percentText = container.querySelector('.percent-text');
-            const toast = document.getElementById('toast');
+      {/* PRICING SECTION */}
+      <main className="max-w-7xl mx-auto px-6 pb-40">
+        <section id="pricing">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl font-bold mb-6 uppercase tracking-tighter">
+              Wähle deinen <span className="bg-gradient-to-r from-[#C5A021] via-[#D4AF37] to-[#B8860B] bg-clip-text text-transparent italic">Einstieg</span>
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+            {/* ELITE PLAN */}
+            <div className="bg-zinc-900/40 backdrop-blur-md p-12 rounded-[40px] border border-zinc-800 flex flex-col hover:border-[#C5A021]/50 transition-all duration-500 group">
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold mb-1 uppercase tracking-widest text-zinc-300">Elite Access</h3>
+                <p className="text-gray-500 text-sm italic">Für Builder & Do-it-yourself</p>
+              </div>
+              <div className="text-5xl font-black mb-10 tracking-tighter italic">
+                2.997 € 
+                <span className="text-xs text-gray-500 font-normal tracking-normal block mt-1">+ MwSt einmalig</span>
+              </div>
+              <ul className="space-y-5 mb-12 flex-grow text-left">
+                <li className="flex items-center gap-4 text-sm text-gray-300 font-semibold"><span className="text-green-500 text-xl">✓</span> Core SaaS Lizenz (White Label)</li>
+                <li className="flex items-center gap-4 text-sm text-gray-300 font-semibold"><span className="text-green-500 text-xl">✓</span> Landing Page Template</li>
+                <li className="flex items-center gap-4 text-sm text-gray-300 font-semibold"><span class="text-green-500 text-xl">✓</span> 6-Wochen Email Sequence Blueprint</li>
+              </ul>
+              <button 
+                onClick={() => redirectToDigistore('elite')}
+                className="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-gray-200 transition active:scale-95 uppercase tracking-tighter"
+              >
+                AUSWÄHLEN
+              </button>
+            </div>
 
-            // UI-Wechsel
-            btn.disabled = true;
-            btn.innerText = "Processing...";
-            container.classList.remove('hidden');
+            {/* GOTT-MODUS PLAN */}
+            <div className="bg-zinc-900/40 backdrop-blur-md p-12 rounded-[40px] border-2 border-[#C5A021] flex flex-col relative overflow-hidden bg-gradient-to-b from-[#C5A021]/10 to-transparent transition-all duration-500">
+              <div className="absolute top-8 right-8 bg-gradient-to-r from-[#C5A021] to-[#D4AF37] text-black text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-tighter">
+                Most Popular
+              </div>
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold mb-1 bg-gradient-to-r from-[#C5A021] via-[#D4AF37] to-[#B8860B] bg-clip-text text-transparent uppercase tracking-widest">
+                  GOTT-MODUS
+                </h3>
+                <p className="text-gray-400 text-sm italic">Full Done-For-You Experience</p>
+              </div>
+              <div className="text-5xl font-black mb-10 tracking-tighter italic text-white">
+                5.997 € 
+                <span className="text-xs text-gray-500 font-normal tracking-normal block mt-1">+ MwSt einmalig</span>
+              </div>
+              <ul className="space-y-5 mb-12 flex-grow text-left">
+                <li className="flex items-center gap-4 text-sm text-white font-bold"><span className="text-xl">👑</span> Alles aus Elite inklusive</li>
+                <li className="flex items-center gap-4 text-sm text-white font-bold"><span className="text-xl">👑</span> Full Tech-Setup & Integration</li>
+                <li className="flex items-center gap-4 text-sm text-white font-bold"><span className="text-xl">👑</span> Shadow VSL Assets (DFY)</li>
+                <li className="flex items-center gap-4 text-sm text-[#C5A021] font-bold italic"><span className="text-xl">✨</span> Prioritäts-Support via Slack</li>
+              </ul>
+              <button 
+                onClick={() => redirectToDigistore('god')}
+                className="w-full py-5 bg-gradient-to-r from-[#C5A021] to-[#D4AF37] text-black font-black rounded-2xl hover:shadow-[0_0_30px_rgba(197,160,33,0.5)] transition active:scale-95 uppercase tracking-tighter"
+              >
+                SOUVERÄN WERDEN
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
 
-            // Fortschritt simulieren
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 15) + 5;
-                if(progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    
-                    // Erfolg
-                    toast.innerText = "SUCCESS: " + name + " heruntergeladen.";
-                    toast.style.display = 'block';
-                    btn.innerText = "Download Abgeschlossen";
-                    btn.classList.add('opacity-50');
-                    
-                    setTimeout(() => { toast.style.display = 'none'; }, 4000);
-                }
-                bar.style.width = progress + "%";
-                percentText.innerText = progress + "%";
-            }, 300);
-        }
-    </script>
-</body>
-</html>
+      <footer className="max-w-7xl mx-auto px-6 py-20 border-t border-zinc-900 text-center">
+        <div className="text-xl font-extrabold tracking-tighter uppercase mb-6">
+          SOV<span className="bg-gradient-to-r from-[#C5A021] via-[#D4AF37] to-[#B8860B] bg-clip-text text-transparent italic">ER</span>EIGN
+        </div>
+        <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-[0.5em]">
+          &copy; 2024 Sovereign Protocol • Built for Digital Sovereignty
+        </p>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
