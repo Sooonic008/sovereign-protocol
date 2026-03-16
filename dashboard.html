@@ -1,208 +1,238 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOVEREIGN | Command Center</title>
-    <style>
-        :root {
-            --gold: #D4AF37;
-            --gold-bright: #F5E0A3;
-            --dark: #050505;
-            --card-bg: rgba(15, 15, 15, 0.8);
-            --border: rgba(212, 175, 55, 0.2);
-            --neon-green: #00ff41;
-        }
+import React, { useState, useEffect } from 'react';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, query, limit } from 'firebase/firestore';
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+// --- ICONS ---
+const ShieldCheckIcon = () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>;
+const ShoppingCartIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>;
+const ZapIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>;
+const CrownIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"></path></svg>;
+const TrendingUpIcon = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>;
 
-        body {
-            background-color: var(--dark);
-            color: #fff;
-            overflow: hidden;
-            height: 100vh;
-            position: relative;
-        }
+// --- FIREBASE CONFIG ---
+const firebaseConfig = JSON.parse(__firebase_config);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'sovereign-hq-v2';
 
-        /* FIX: Scanline Effekt blockiert keine Klicks mehr */
-        body::before {
-            content: " ";
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
-            background-size: 100% 4px, 3px 100%;
-            z-index: 1000;
-            pointer-events: none; /* DAS IST DER KEY-FIX */
-        }
+const App = () => {
+  const [user, setUser] = useState(null);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [pin, setPin] = useState('');
+  const [loginError, setLoginError] = useState(false);
+  const [activeTab, setActiveTab] = useState('shop');
+  const [transactions, setTransactions] = useState([]);
+  const [stats, setStats] = useState({ totalRevenue: 184350, conversion: 18.4 });
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 280px 1fr 300px;
-            grid-template-rows: 80px 1fr 200px;
-            gap: 15px;
-            height: 100vh;
-            padding: 20px;
-            position: relative;
-            z-index: 10;
-        }
+  // 1. AUTHENTICATION
+  useEffect(() => {
+    const initAuth = async () => {
+      if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+        await signInWithCustomToken(auth, __initial_auth_token);
+      } else {
+        await signInAnonymously(auth);
+      }
+    };
+    initAuth();
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return () => unsubscribe();
+  }, []);
 
-        .panel {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
-        }
+  // 2. DATA LISTENER
+  useEffect(() => {
+    if (!user) return;
 
-        /* HEADER */
-        .header {
-            grid-column: 1 / -1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--gold);
-        }
+    // Listen for transactions
+    const txCollection = collection(db, 'artifacts', appId, 'public', 'data', 'transactions');
+    const unsubscribeTx = onSnapshot(txCollection, (snapshot) => {
+      const txData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      // In-memory sort by timestamp (Firebase Rule 2: No complex queries)
+      const sorted = txData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      setTransactions(sorted);
+      
+      // Dynamic stats calculation
+      const revenue = sorted.reduce((acc, curr) => acc + (curr.numericAmount || 0), 184350);
+      setStats(prev => ({ ...prev, totalRevenue: revenue }));
+    }, (err) => console.error("Firestore Error:", err));
 
-        .system-status { display: flex; gap: 30px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
-        .status-item span { color: var(--gold); }
+    return () => unsubscribeTx();
+  }, [user]);
 
-        /* SIDEBAR / METRICS */
-        .sidebar { grid-row: 2 / 4; }
-        .stat-label { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 2px; }
-        .stat-value { font-size: 28px; font-weight: 900; color: var(--gold); text-shadow: 0 0 10px rgba(212, 175, 55, 0.3); margin-bottom: 20px; }
+  const handlePinChange = (e) => {
+    const val = e.target.value;
+    setPin(val);
+    if (val === '2024') {
+      setIsUnlocked(true);
+      setLoginError(false);
+    } else if (val.length === 4) {
+      setLoginError(true);
+      setTimeout(() => { setPin(''); setLoginError(false); }, 800);
+    }
+  };
 
-        /* MAIN VIEWPORT */
-        .main-view { grid-column: 2; }
-        .map-placeholder {
-            flex-grow: 1;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(212, 175, 55, 0.1);
-            position: relative;
-            overflow: hidden;
-            height: 100%;
-        }
+  const handlePurchase = async (planName, amount, numeric) => {
+    if (!user) return;
+    try {
+      const txCollection = collection(db, 'artifacts', appId, 'public', 'data', 'transactions');
+      await addDoc(txCollection, {
+        user: `User_${Math.floor(Math.random() * 9000) + 1000}`,
+        amount: `+ ${amount} €`,
+        numericAmount: numeric,
+        plan: planName,
+        status: 'Verifiziert',
+        timestamp: Date.now()
+      });
+      setActiveTab('dashboard'); // Redirect to show the new entry
+    } catch (e) {
+      console.error("Purchase failed", e);
+    }
+  };
 
-        .radar {
-            width: 300px; height: 300px;
-            border: 1px solid rgba(212,175,55,0.2);
-            border-radius: 50%;
-            position: relative;
-        }
-        .radar::after {
-            content: ""; position: absolute; inset: 0;
-            background: conic-gradient(from 0deg, transparent, var(--gold));
-            opacity: 0.1; border-radius: 50%;
-            animation: rotate 4s linear infinite;
-        }
+  if (!isUnlocked) {
+    return (
+      <div className="min-h-screen bg-[#020202] text-white flex flex-col items-center justify-center p-6 font-sans">
+        <div className="w-full max-w-md z-10">
+          <div className="text-center mb-10">
+            <h1 className="text-5xl font-black italic tracking-tighter uppercase mb-2">SOV<span className="text-[#d4af37]">ER</span>EIGN</h1>
+            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.5em]">Lighthouse Access Required</p>
+          </div>
+          <div className={`bg-[#0a0a0a] border ${loginError ? 'border-red-500/50' : 'border-[#d4af37]/20'} p-10 rounded-[2.5rem] shadow-2xl transition-all`}>
+            <div className="flex justify-center mb-8"><div className="p-4 rounded-2xl bg-[#d4af37]/5 border border-[#d4af37]/20"><ShieldCheckIcon /></div></div>
+            <input type="password" value={pin} placeholder="PIN" maxLength={4} onChange={handlePinChange} className="w-full bg-black/50 border border-white/10 p-5 rounded-2xl text-center text-4xl tracking-[0.8em] font-black focus:border-[#d4af37] outline-none text-[#d4af37] placeholder:text-zinc-800" autoFocus />
+            {loginError && <p className="text-center text-[10px] font-black text-red-500 uppercase mt-6 tracking-widest animate-pulse">Access Denied</p>}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-        /* KAUF-BUTTONS / ACTIONS */
-        .btn-action {
-            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-            color: #000;
-            padding: 15px;
-            border: none;
-            border-radius: 4px;
-            font-weight: 900;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: 0.3s;
-            text-decoration: none;
-            text-align: center;
-            margin-top: auto;
-            display: block;
-        }
+  return (
+    <div className="min-h-screen bg-[#020202] text-white p-6 md:p-12 font-sans selection:bg-[#d4af37] selection:text-black">
+      <header className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 border-b border-white/5 pb-10">
+        <div>
+          <h1 className="text-4xl font-black italic uppercase tracking-tighter">SOV<span className="text-[#d4af37]">ER</span>EIGN <span className="text-zinc-800 text-2xl ml-2 italic">HQ</span></h1>
+          <p className="text-[10px] text-[#d4af37] font-black uppercase tracking-[0.3em] mt-2 flex items-center gap-2">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> {user ? 'Cloud Synced' : 'Syncing...'}
+          </p>
+        </div>
+        <div className="flex gap-4 bg-zinc-900/50 p-1.5 rounded-2xl border border-white/5">
+          <button onClick={() => setActiveTab('shop')} className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'shop' ? 'bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/20' : 'text-zinc-500 hover:text-white'}`}><ShoppingCartIcon /> Lizenzen</button>
+          <button onClick={() => setActiveTab('dashboard')} className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'dashboard' ? 'bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/20' : 'text-zinc-500 hover:text-white'}`}>Management</button>
+        </div>
+      </header>
 
-        .btn-action:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4);
-            filter: brightness(1.2);
-        }
-
-        /* TERMINAL AREA */
-        .terminal {
-            grid-column: 2 / 4;
-            background: #000;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            color: var(--gold);
-            padding: 15px;
-            border-top: 1px solid var(--gold);
-            overflow-y: hidden;
-        }
-
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        h2 { font-style: italic; text-transform: uppercase; font-size: 14px; margin-bottom: 15px; color: var(--gold); }
-    </style>
-</head>
-<body>
-
-    <div class="dashboard-grid">
-        <header class="panel header">
-            <div style="font-weight: 900; font-size: 20px;">SOVEREIGN <span style="color:var(--gold)">V2.4</span></div>
-            <div class="system-status">
-                <div class="status-item">LATENCY: <span>12MS</span></div>
-                <div class="status-item">SECURITY: <span>ENCRYPTED</span></div>
+      <main className="max-w-7xl mx-auto">
+        {activeTab === 'shop' ? (
+          <div>
+            <div className="text-center mb-16">
+              <h2 className="text-xs font-black uppercase tracking-[0.5em] text-[#d4af37] mb-4">Wähle dein Deployment</h2>
+              <p className="text-3xl font-black italic uppercase tracking-tight">Skaliere dein Imperium</p>
             </div>
-            <a href="index.html" style="color:#444; font-size: 10px; text-decoration:none;">DISCONNECT</a>
-        </header>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+              {/* CORE */}
+              <div className="bg-[#080808] border border-white/5 p-10 rounded-[3rem] flex flex-col transition-all hover:border-[#d4af37]/30">
+                <div className="mb-8">
+                  <h3 className="text-xl font-black italic uppercase tracking-tighter text-zinc-400">Core Node</h3>
+                  <div className="mt-4"><span className="text-5xl font-black italic text-white">997€</span></div>
+                </div>
+                <ul className="space-y-4 mb-10 flex-grow">
+                  {['Single Data Center', 'Standard Encryption', '99.9% Uptime'].map(f => (
+                    <li key={f} className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-3">
+                      <div className="w-1.5 h-1.5 border border-[#d4af37] rounded-full"></div> {f}
+                    </li>
+                  ))}
+                </ul>
+                <button onClick={() => handlePurchase('Core Node', '997', 997)} className="w-full py-5 bg-white/5 border border-white/10 text-white font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl hover:bg-white hover:text-black transition-all">
+                  Jetzt Kaufen
+                </button>
+              </div>
 
-        <aside class="panel sidebar">
-            <h2>Financial Assets</h2>
-            <div class="stat-label">Net Equity Est.</div>
-            <div class="stat-value">€ 1.248.500</div>
+              {/* PRO */}
+              <div className="bg-[#0c0c0c] border-2 border-[#d4af37] p-10 rounded-[3rem] relative flex flex-col transform scale-105 shadow-2xl shadow-[#d4af37]/10 z-10">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#d4af37] text-black px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl">Most Popular</div>
+                <div className="mb-8">
+                  <div className="flex justify-between items-center"><h3 className="text-2xl font-black italic uppercase tracking-tighter text-[#d4af37]">Sovereign Pro</h3><ZapIcon /></div>
+                  <div className="mt-4"><span className="text-6xl font-black italic text-white">2.997€</span></div>
+                </div>
+                <ul className="space-y-4 mb-10 flex-grow">
+                  {['Global Node Network', 'Military-Grade Shield', 'Priority AI'].map(f => (
+                    <li key={f} className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest flex items-center gap-3">
+                      <div className="w-1.5 h-1.5 bg-[#d4af37] rounded-full"></div> {f}
+                    </li>
+                  ))}
+                </ul>
+                <button onClick={() => handlePurchase('Sovereign Pro', '2.997', 2997)} className="w-full py-6 bg-[#d4af37] text-black font-black uppercase text-[12px] tracking-[0.3em] rounded-2xl hover:bg-white transition-all shadow-lg shadow-[#d4af37]/30">
+                  Upgrade auf Pro
+                </button>
+              </div>
+
+              {/* ENTERPRISE */}
+              <div className="bg-[#080808] border border-white/5 p-10 rounded-[3rem] flex flex-col transition-all hover:border-[#d4af37]/30">
+                <div className="mb-8">
+                  <div className="flex justify-between items-center"><h3 className="text-xl font-black italic uppercase tracking-tighter text-zinc-400">Enterprise Elite</h3><CrownIcon /></div>
+                  <div className="mt-4"><span className="text-5xl font-black italic text-white">5.997€</span></div>
+                </div>
+                <ul className="space-y-4 mb-10 flex-grow">
+                  {['Dedicated Hardware', 'Lighthouse Protocol', 'White-Label'].map(f => (
+                    <li key={f} className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-3">
+                      <div className="w-1.5 h-1.5 border border-white/20 rounded-full"></div> {f}
+                    </li>
+                  ))}
+                </ul>
+                <button onClick={() => handlePurchase('Enterprise Elite', '5.997', 5997)} className="w-full py-5 bg-white/5 border border-white/10 text-white font-black uppercase text-[11px] tracking-[0.2em] rounded-2xl hover:bg-[#d4af37] hover:text-black transition-all">
+                  Elite Sichern
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-[#080808] border border-white/5 p-8 rounded-[2.5rem]">
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4">Total Revenue MRR</p>
+              <h2 className="text-5xl font-black text-[#d4af37] italic tracking-tighter">€ {stats.totalRevenue.toLocaleString()}</h2>
+              <div className="mt-6 flex items-center gap-2 text-green-500 text-[10px] font-bold"><TrendingUpIcon /> +24% LIVE</div>
+            </div>
             
-            <div class="stat-label">Daily Cashflow</div>
-            <div class="stat-value">+ € 12.402</div>
-
-            <a href="DEIN_DIGISTORE_LINK_1" class="btn-action">Deploy New Node</a>
-        </aside>
-
-        <main class="main-view">
-            <div class="panel map-placeholder">
-                <div class="radar"></div>
-                <div style="position: absolute; color: var(--gold); font-size: 40px; font-weight: 900; opacity: 0.1; letter-spacing: 15px;">SOVEREIGN</div>
+            <div className="bg-[#080808] border border-white/5 p-8 rounded-[2.5rem]">
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4">Conversion Rate</p>
+              <h2 className="text-5xl font-black italic tracking-tighter text-white">{stats.conversion}%</h2>
+              <p className="mt-6 text-[9px] text-zinc-600 uppercase font-black tracking-widest">Optimized for High Ticket</p>
             </div>
-        </main>
 
-        <section class="panel terminal" id="terminal-out">
-            <div>[SYSTEM] Initializing Sovereign Protocol...</div>
-            <div id="log-line">[AUTH] Founder Credentials Verified.</div>
-        </section>
-
-        <aside class="panel">
-            <h2>Protocols</h2>
-            <div style="font-size: 12px; margin-bottom: 10px;">
-                <span style="color:var(--neon-green)">●</span> Stealth Mode Active<br><br>
-                <span style="color:var(--neon-green)">●</span> Matrix Bypassing...
+            <div className="bg-[#080808] border border-white/5 p-8 rounded-[2.5rem] flex flex-col justify-center items-center">
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Network ID</p>
+              <p className="text-[10px] text-zinc-400 font-mono truncate w-full text-center">{user?.uid || 'CONNECTING...'}</p>
             </div>
             
-            <a href="DEIN_DIGISTORE_LINK_2" class="btn-action">Activate God Mode</a>
-        </aside>
+            <div className="md:col-span-3 bg-[#080808] border border-white/5 rounded-[3rem] p-12 mt-4">
+               <h3 className="text-xs font-black uppercase tracking-[0.5em] text-[#d4af37] mb-8 italic">Cloud Database Feed</h3>
+               <div className="space-y-3">
+                 {transactions.length > 0 ? transactions.map((t, i) => (
+                   <div key={t.id || i} className="flex items-center justify-between p-6 bg-black/40 border border-white/5 rounded-3xl group hover:border-[#d4af37]/40 transition-all">
+                     <div className="flex items-center gap-6">
+                       <div className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-green-500 animate-pulse' : 'bg-zinc-800'}`}></div>
+                       <div className="flex flex-col">
+                         <span className="text-sm font-black uppercase tracking-widest">{t.user}</span>
+                         <span className="text-[9px] text-zinc-600 uppercase font-bold tracking-tighter">{t.status} • {new Date(t.timestamp).toLocaleTimeString()}</span>
+                       </div>
+                     </div>
+                     <div className="text-right">
+                       <span className="text-lg font-black text-white italic block">{t.amount}</span>
+                       <span className="text-[8px] border border-[#d4af37]/30 text-[#d4af37] px-3 py-1 rounded-full uppercase font-black tracking-widest mt-1 inline-block">{t.plan}</span>
+                     </div>
+                   </div>
+                 )) : (
+                   <div className="p-12 text-center text-zinc-700 font-black uppercase tracking-widest text-xs">Waiting for first Cloud Transaction...</div>
+                 )}
+               </div>
+            </div>
+          </div>
+        )}
+      </main>
     </div>
+  );
+};
 
-    <script>
-        const terminal = document.getElementById('terminal-out');
-        const logs = [
-            "Encrypted connection established...",
-            "Syncing neural assets...",
-            "Bypassing standard restrictions...",
-            "Liquidity pools: STABLE",
-            "Founder heartbeat detected."
-        ];
-
-        setInterval(() => {
-            const line = document.createElement('div');
-            line.innerText = `[LOG] ${logs[Math.floor(Math.random() * logs.length)]}`;
-            terminal.appendChild(line);
-            if (terminal.childNodes.length > 6) terminal.removeChild(terminal.firstChild);
-        }, 3000);
-    </script>
-</body>
-</html>
+export default App;
