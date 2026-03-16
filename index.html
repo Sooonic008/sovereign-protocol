@@ -1,245 +1,298 @@
 <!DOCTYPE html>
-
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sovereign Protocol | Digital Empire</title>
-
-<style>
-    /* RESET & BASE */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign Protocol | Digital Empire</title>
     
-    :root {
-        --gold: #D4AF37;
-        --dark: #050505;
-        --card-bg: rgba(20, 20, 20, 0.8);
-    }
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        
+        :root {
+            --gold: #D4AF37;
+            --gold-bright: #F5E0A3;
+            --dark: #050505;
+            --card-bg: rgba(15, 15, 15, 0.9);
+            --border: rgba(212, 175, 55, 0.2);
+        }
 
-    body {
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        background-color: var(--dark);
-        color: #ffffff;
-        line-height: 1.6;
-        overflow-x: hidden;
-    }
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background-color: var(--dark);
+            color: #ffffff;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
 
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
-    /* NAVBAR */
-    nav {
-        position: fixed;
-        top: 0; width: 100%;
-        background: rgba(5, 5, 5, 0.9);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid #1a1a1a;
-        z-index: 1000;
-    }
+        .bg-glow {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100vh;
+            background: radial-gradient(circle at 50% -20%, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
-    .nav-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 80px;
-    }
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+        }
 
-    .logo {
-        font-size: 24px;
-        font-weight: 900;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        font-style: italic;
-    }
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 90px;
+        }
 
-    .logo span { color: var(--gold); }
+        .logo {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            font-style: italic;
+            cursor: pointer;
+            user-select: none;
+        }
 
-    /* HERO SECTION */
-    .hero {
-        padding: 200px 0 100px;
-        text-align: center;
-        background: radial-gradient(circle at top, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
-    }
+        .logo span { color: var(--gold); }
 
-    .badge {
-        display: inline-block;
-        padding: 8px 20px;
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        border-radius: 50px;
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        color: var(--gold);
-        margin-bottom: 30px;
-    }
+        .hero {
+            padding: 220px 0 120px;
+            text-align: center;
+        }
 
-    h1 {
-        font-size: clamp(40px, 8vw, 100px);
-        font-weight: 900;
-        line-height: 0.9;
-        text-transform: uppercase;
-        margin-bottom: 30px;
-        font-style: italic;
-    }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
 
-    .gold-text {
-        background: linear-gradient(135deg, #C5A021 0%, #D4AF37 50%, #B8860B 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+        .badge::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
 
-    .hero p {
-        font-size: 18px;
-        color: #888;
-        max-width: 700px;
-        margin: 0 auto 50px;
-    }
+        h1 {
+            font-size: clamp(48px, 10vw, 110px);
+            font-weight: 900;
+            line-height: 0.85;
+            text-transform: uppercase;
+            margin-bottom: 35px;
+            font-style: italic;
+            letter-spacing: -4px;
+        }
 
-    /* BUTTONS */
-    .btn-gold {
-        background: linear-gradient(135deg, #C5A021 0%, #D4AF37 100%);
-        color: #000;
-        padding: 20px 50px;
-        border-radius: 12px;
-        text-decoration: none;
-        font-weight: 800;
-        text-transform: uppercase;
-        display: inline-block;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+        .gold-text {
+            background: linear-gradient(135deg, #C5A021 0%, #F5E0A3 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+        }
 
-    .btn-gold:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
-    }
+        .hero p {
+            font-size: 19px;
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 650px;
+            margin: 0 auto 60px;
+        }
 
-    /* PRICING */
-    .pricing {
-        padding: 100px 0;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 40px;
-    }
+        .btn-gold {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+            color: #000;
+            padding: 24px 60px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 900;
+            text-transform: uppercase;
+            display: inline-block;
+            transition: all 0.4s ease;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
 
-    .card {
-        background: var(--card-bg);
-        border: 1px solid #1a1a1a;
-        padding: 60px 40px;
-        border-radius: 30px;
-        transition: border-color 0.3s ease;
-        position: relative;
-    }
+        .btn-gold:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(212, 175, 55, 0.3);
+        }
 
-    .card.featured {
-        border: 1px solid var(--gold);
-        background: linear-gradient(to bottom right, rgba(212, 175, 55, 0.05), transparent);
-    }
+        /* ADMIN PANEL OVERLAY */
+        #admin-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(15px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .card h3 { font-size: 12px; text-transform: uppercase; color: #555; margin-bottom: 10px; }
-    .card .title { font-size: 32px; font-weight: 800; margin-bottom: 20px; font-style: italic; }
-    .card .price { font-size: 50px; font-weight: 900; color: var(--gold); margin-bottom: 40px; }
+        .admin-card {
+            width: 100%;
+            max-width: 400px;
+            background: #0a0a0a;
+            border: 1px solid var(--gold);
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+        }
 
-    .card ul { list-style: none; margin-bottom: 50px; }
-    .card li { margin-bottom: 15px; color: #ccc; font-size: 15px; display: flex; align-items: center; }
-    .card li::before { content: "✦"; color: var(--gold); margin-right: 15px; }
+        .admin-input {
+            width: 100%;
+            padding: 18px;
+            margin: 25px 0;
+            background: #111;
+            border: 1px solid #222;
+            color: #fff;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
 
-    .btn-outline {
-        display: block;
-        text-align: center;
-        padding: 15px;
-        border: 1px solid #333;
-        border-radius: 12px;
-        color: #fff;
-        text-decoration: none;
-        font-weight: bold;
-        transition: background 0.3s;
-    }
+        .admin-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-    .btn-outline:hover { background: rgba(255,255,255,0.05); }
+        .admin-btn:hover {
+            filter: brightness(1.2);
+            transform: scale(1.02);
+        }
 
-    footer {
-        padding: 100px 0;
-        text-align: center;
-        border-top: 1px solid #1a1a1a;
-        color: #444;
-        font-size: 10px;
-        letter-spacing: 5px;
-        text-transform: uppercase;
-    }
+        /* NEU: TEST-MESSAGE FÜR VORSCHAU */
+        #preview-note {
+            display: none;
+            color: #D4AF37;
+            font-size: 12px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
 
-    @media (max-width: 768px) {
-        h1 { font-size: 50px; }
-    }
-</style>
-
-
+        footer {
+            padding: 100px 0 50px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 10px;
+            letter-spacing: 5px;
+        }
+    </style>
 </head>
 <body>
 
-<nav>
-    <div class="container nav-content">
-        <div class="logo">SOV<span>ER</span>EIGN</div>
-        <a href="#pricing" class="btn-gold" style="padding: 10px 25px; font-size: 11px;">Aktivieren</a>
-    </div>
-</nav>
+    <div class="bg-glow"></div>
 
-<header class="hero">
-    <div class="container">
-        <span class="badge">Digital Sovereignty Protocol</span>
-        <h1>Sovereign <br><span class="gold-text">Protocol</span></h1>
-        <p>Erbaue ein unantastbares Business-Imperium. High-Ticket SaaS Lösungen für die neue Ära digitaler Dominanz.</p>
-        <a href="#pricing" class="btn-gold">System jetzt aktivieren</a>
-    </div>
-</header>
-
-<section id="pricing" class="container">
-    <div class="pricing">
-        <!-- Tier I -->
-        <div class="card">
-            <h3>Stufe I</h3>
-            <div class="title">Elite Access</div>
-            <div class="price">2.997 €</div>
-            <ul>
-                <li>White-Label SaaS Framework</li>
-                <li>Core Protocol Infrastructure</li>
-                <li>Strategischer Onboarding Guide</li>
-                <li>30 Tage Technical Support</li>
-            </ul>
-            <a href="https://www.digistore24.com/product/676462?vendor=sooonic008" class="btn-outline">Plan Auswählen</a>
+    <nav>
+        <div class="container nav-content">
+            <div class="logo" id="admin-trigger">SOV<span>ER</span>EIGN</div>
+            <a href="#pricing" class="btn-gold" style="padding: 12px 25px; font-size: 11px; border-radius: 8px;">Access</a>
         </div>
+    </nav>
 
-        <!-- Tier II -->
-        <div class="card featured">
-            <div style="position:absolute; top:20px; right:20px; font-size:10px; color:var(--gold); font-weight:bold;">MAXIMALER IMPACT</div>
-            <h3>Stufe II</h3>
-            <div class="title">Gott-Modus</div>
-            <div class="price">5.997 €</div>
-            <ul>
-                <li>Full Technical Implementation</li>
-                <li>Shadow VSL Asset Integration</li>
-                <li>Custom Sales Funnel Architecture</li>
-                <li>Lifetime Strategic Partnership</li>
-                <li>Direct Slack Access to Founders</li>
-            </ul>
-            <a href="https://www.digistore24.com/product/676464?vendor=sooonic008" class="btn-gold" style="width:100%; text-align:center;">Dominanz Sichern</a>
+    <div id="admin-overlay">
+        <div class="admin-card">
+            <div style="color: var(--gold); font-weight: 900; letter-spacing: 3px; margin-bottom: 10px;">IDENTITY CHECK</div>
+            <h2 style="font-style: italic; font-size: 24px; text-transform: uppercase; margin-bottom: 5px;">Founder Login</h2>
+            <p style="color: #666; font-size: 12px;">Sicherheitsschlüssel erforderlich.</p>
+            
+            <input type="password" id="admin-pw" class="admin-input" placeholder="••••••••">
+            
+            <button onclick="checkAdminPw()" class="admin-btn">Login Bestätigen</button>
+            <div id="preview-note">VORSCHAU-MODUS: Weiterleitung aktiv!</div>
+            <button onclick="closeAdmin()" style="margin-top:20px; background:none; border:none; color:#444; cursor:pointer; font-size:10px; text-transform:uppercase;">Abbrechen</button>
         </div>
     </div>
-</section>
 
-<footer>
-    SECURE PROTOCOL &copy; 2024 SOVEREIGN PROTOCOL
-</footer>
+    <header class="hero">
+        <div class="container">
+            <span class="badge">Sovereign Protocol v2.4</span>
+            <h1>Digital <br><span class="gold-text">Sovereignty</span></h1>
+            <p>Erbaue ein unantastbares Business-Imperium mit maximaler Hebelwirkung.</p>
+            <a href="saas_sovereign_blueprint.html" class="btn-gold">Das Protokoll öffnen</a>
+        </div>
+    </header>
 
-<script>
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
+    <footer>&copy; 2024 SOVEREIGN PROTOCOL</footer>
+
+    <script>
+        const MASTER_PW = "sovereign2024";
+        let clickCount = 0;
+
+        document.getElementById('admin-trigger').addEventListener('click', () => {
+            clickCount++;
+            if (clickCount === 5) {
+                document.getElementById('admin-overlay').style.display = 'flex';
+                document.getElementById('admin-pw').focus();
+                clickCount = 0;
+            }
         });
-    });
-</script>
 
+        function checkAdminPw() {
+            const pw = document.getElementById('admin-pw').value;
+            if (pw === MASTER_PW) {
+                // PRÜFUNG: Sind wir in der Vorschau oder Live?
+                const isPreview = window.location.hostname === "localhost" || 
+                                 window.location.protocol === "blob:" || 
+                                 window.location.hostname.includes("preview") || 
+                                 window.location.hostname === "";
 
+                if (isPreview) {
+                    // Zeige eine Bestätigung in der Vorschau
+                    document.getElementById('preview-note').innerText = "SUCCESS: Weiterleitung zu dashboard.html...";
+                    document.getElementById('preview-note').style.display = "block";
+                    
+                    // Versuche trotzdem zu laden, damit du siehst was passiert
+                    setTimeout(() => {
+                        window.location.href = "dashboard.html";
+                    }, 1000);
+                } else {
+                    // LIVE-MODUS: Direkter Wechsel
+                    window.location.href = "dashboard.html";
+                }
+            } else {
+                alert("Zugriff verweigert.");
+                document.getElementById('admin-pw').value = "";
+            }
+        }
+
+        function closeAdmin() {
+            document.getElementById('admin-overlay').style.display = 'none';
+            document.getElementById('preview-note').style.display = "none";
+        }
+
+        document.getElementById('admin-pw').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkAdminPw();
+        });
+    </script>
 </body>
 </html>
