@@ -3,210 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sovereign Admin Panel | Dashboard</title>
-    <!-- Tailwind CSS mit Fallback-Check -->
+    <title>Sovereign Command | Founder Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* Fallback Styles falls Tailwind nicht sofort lädt */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Urbanist', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
+        .gold-gradient { background: linear-gradient(135deg, #C5A021 0%, #D4AF37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-card { background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(212, 175, 55, 0.1); border-radius: 24px; transition: all 0.3s ease; }
+        .glass-card:hover { border-color: rgba(212, 175, 55, 0.3); transform: translateY(-2px); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .status-online { background: #10b981; box-shadow: 0 0 10px #10b981; }
         
-        body { 
-            font-family: 'Urbanist', sans-serif; 
-            background-color: #050505; 
-            color: #ffffff;
-            overflow-x: hidden;
-            line-height: 1.5;
-        }
-
-        .gold-gradient { 
-            background: linear-gradient(135deg, #C5A021 0%, #D4AF37 50%, #B8860B 100%); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-        }
-
-        .gold-bg {
-            background: linear-gradient(135deg, #C5A021 0%, #D4AF37 100%);
-            border: none;
-            cursor: pointer;
-        }
-
-        /* Glassmorphism Design */
-        .glass-card {
-            background: rgba(15, 15, 15, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.15);
-            border-radius: 24px;
-            transition: all 0.3s ease;
-        }
-
-        .glass-card:hover {
-            border-color: rgba(212, 175, 55, 0.4);
-            transform: translateY(-4px);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #22c55e;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 10px #22c55e;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.4); opacity: 0.6; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            color: #71717a;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .sidebar-link:hover, .sidebar-link.active {
-            background: rgba(212, 175, 55, 0.1);
-            color: #D4AF37;
-        }
-
-        /* Verhindert das "Zerreisen" auf kleinen Bildschirmen */
-        @media (max-width: 1024px) {
-            .sidebar-hide { display: none; }
+        /* Loading Bar Animation */
+        .progress-bar { width: 0%; height: 2px; background: #D4AF37; transition: width 2s ease-in-out; }
+        
+        .notification-toast {
+            position: fixed; bottom: 30px; right: 30px; 
+            background: #D4AF37; color: black; padding: 20px 30px;
+            border-radius: 15px; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 1px; display: none; z-index: 1000;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
     </style>
 </head>
 <body class="antialiased min-h-screen">
 
-    <!-- HEADER NAVIGATION -->
-    <nav class="w-full border-b border-white/5 bg-black/50 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-[1400px] mx-auto flex justify-between items-center px-6 py-5">
-            <div class="text-xl font-800 tracking-tighter uppercase italic">
-                SOV<span class="gold-gradient">ER</span>EIGN
-            </div>
+    <div id="toast" class="notification-toast italic">Verschlüsselter Download gestartet...</div>
+
+    <!-- Top Navigation -->
+    <nav class="border-b border-white/5 bg-black/60 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-[1600px] mx-auto flex justify-between items-center px-8 py-4">
             <div class="flex items-center gap-4">
-                <div class="hidden sm:flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/5">
-                    <span class="status-dot"></span>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">System: Online</span>
+                <div class="text-xl font-800 italic uppercase tracking-tighter">SOV<span class="gold-gradient">ER</span>EIGN</div>
+                <div class="h-4 w-[1px] bg-white/10 mx-2"></div>
+                <div class="flex items-center text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                    <span class="status-dot status-online"></span> System Online
                 </div>
-                <a href="index.html" class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition no-underline border border-white/10 px-4 py-2 rounded-lg">Logout</a>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="text-right hidden sm:block">
+                    <p class="text-[10px] text-zinc-500 font-bold uppercase">Account Status</p>
+                    <p class="text-xs font-black gold-gradient">GOTT-MODUS AKTIV</p>
+                </div>
+                <a href="index.html" class="bg-white/5 hover:bg-white/10 px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition border border-white/5">Logout</a>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-[1400px] mx-auto px-6 py-10">
-        <div class="flex flex-col lg:flex-row gap-10">
+    <main class="max-w-[1600px] mx-auto px-8 py-12">
+        
+        <!-- Stats Row -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="glass-card p-6">
+                <p class="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Global Revenue (SaaS)</p>
+                <h3 class="text-3xl font-800 italic">128.402 €</h3>
+                <p class="text-[10px] text-emerald-500 font-bold mt-2">+12.4% vs last month</p>
+            </div>
+            <div class="glass-card p-6">
+                <p class="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Active Instances</p>
+                <h3 class="text-3xl font-800 italic">14 / 20</h3>
+                <div class="w-full bg-white/5 h-1 mt-4 rounded-full overflow-hidden">
+                    <div class="bg-[#D4AF37] h-full w-[70%]"></div>
+                </div>
+            </div>
+            <div class="glass-card p-6">
+                <p class="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">Database Sync</p>
+                <h3 class="text-3xl font-800 italic text-emerald-500">OPTIMAL</h3>
+                <p class="text-[10px] text-zinc-500 font-bold mt-2">Latency: 14ms</p>
+            </div>
+            <div class="glass-card p-6">
+                <p class="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1">System Version</p>
+                <h3 class="text-3xl font-800 italic gold-gradient">v2.4.9-ELITE</h3>
+                <p class="text-[10px] text-zinc-500 font-bold mt-2">Letztes Update: Heute</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- SIDEBAR (Links) -->
-            <aside class="w-full lg:w-64 flex-shrink-0 space-y-1">
-                <div class="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] mb-4 ml-4">Zentrale</div>
-                <a href="#" class="sidebar-link active">Dashboard</a>
-                <a href="#" class="sidebar-link text-zinc-500">Cloud Assets</a>
-                <a href="#" class="sidebar-link text-zinc-500">Security Core</a>
-                <div class="pt-8 text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] mb-4 ml-4">Account</div>
-                <a href="#" class="sidebar-link text-zinc-500">Einstellungen</a>
-                <a href="#" class="sidebar-link text-red-900/40 hover:text-red-500">System Sperren</a>
-            </aside>
-
-            <!-- MAIN CONTENT AREA -->
-            <div class="flex-grow">
-                <header class="mb-10">
-                    <h1 class="text-4xl md:text-5xl font-800 italic uppercase mb-2">Admin <span class="gold-gradient">Dashboard</span></h1>
-                    <p class="text-zinc-500 font-medium">Sitzung aktiv. Alle Verschlüsselungsprotokolle sind stabil.</p>
-                </header>
-
-                <!-- TOP STATS GRID -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
-                    <div class="glass-card p-6">
-                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-3">Netzwerk Status</p>
-                        <h3 class="text-2xl font-bold italic">Stabil <span class="text-green-500 text-sm ml-2">●</span></h3>
-                    </div>
-                    <div class="glass-card p-6">
-                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-3">Sicherheitslevel</p>
-                        <h3 class="text-2xl font-bold italic gold-gradient">PROTOKOLL X</h3>
-                    </div>
-                    <div class="glass-card p-6">
-                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-widest mb-3">Aktive Nodes</p>
-                        <h3 class="text-2xl font-bold italic">Global</h3>
-                    </div>
+            <!-- Sidebar -->
+            <div class="lg:col-span-3 space-y-6">
+                <div class="glass-card p-8">
+                    <h4 class="text-xs font-black uppercase tracking-[0.3em] text-zinc-600 mb-6">Navigation</h4>
+                    <nav class="space-y-2">
+                        <button class="w-full text-left px-4 py-3 rounded-xl bg-[#D4AF37] text-black font-black text-xs uppercase italic tracking-widest">Master Assets</button>
+                        <button onclick="alert('Infrastruktur-Manager lädt...')" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-zinc-400 font-black text-xs uppercase italic tracking-widest transition">Cloud Deploy</button>
+                        <button onclick="alert('Marketing-Suite wird initialisiert...')" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-zinc-400 font-black text-xs uppercase italic tracking-widest transition">Sales Tracker</button>
+                        <button onclick="alert('Support-Channel öffnet...')" class="w-full text-left px-4 py-3 rounded-xl hover:bg-white/5 text-zinc-400 font-black text-xs uppercase italic tracking-widest transition">Expert Support</button>
+                    </nav>
                 </div>
 
-                <!-- DOWNLOADS / ASSETS SECTION -->
-                <div class="glass-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex justify-between items-center">
-                        <h2 class="text-sm font-bold italic uppercase tracking-widest text-[#D4AF37]">Verfügbare Assets</h2>
-                        <span class="text-[9px] font-bold text-zinc-600 bg-white/5 px-2 py-1 rounded">2 Neue</span>
+                <div class="glass-card p-8 border-[#D4AF37]/30">
+                    <h4 class="text-xs font-black uppercase tracking-[0.3em] text-[#D4AF37] mb-4">Gott-Modus Support</h4>
+                    <p class="text-xs text-zinc-400 leading-relaxed mb-6">Dein persönlicher Strategie-Berater ist online. Reaktionszeit: &lt; 15 Min.</p>
+                    <button class="w-full border border-[#D4AF37]/40 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#D4AF37] hover:text-black transition">Slack öffnen</button>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="lg:col-span-9 space-y-6">
+                
+                <h2 class="text-xs font-black uppercase tracking-[0.4em] text-zinc-600 mb-2">Verfügbare Assets</h2>
+
+                <!-- Asset Item 1 -->
+                <div class="glass-card p-8 group">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div class="flex items-center gap-6">
+                            <div class="w-16 h-16 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center text-3xl group-hover:scale-110 transition duration-500">💎</div>
+                            <div>
+                                <h3 class="text-xl font-800 italic uppercase">Sovereign SaaS Core (White-Label)</h3>
+                                <p class="text-xs text-zinc-500 mt-1">Die komplette Software-Infrastruktur. Ready for Rebranding.</p>
+                                <div class="flex gap-4 mt-3">
+                                    <span class="text-[9px] font-black text-[#D4AF37] uppercase bg-[#D4AF37]/10 px-2 py-1 rounded">Build 2024.4</span>
+                                    <span class="text-[9px] font-black text-zinc-500 uppercase bg-white/5 px-2 py-1 rounded">Size: 1.2 GB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="simulateDownload(this, 'SaaS Core')" class="bg-[#D4AF37] text-black px-10 py-4 rounded-2xl font-black text-xs uppercase italic tracking-widest hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition active:scale-95">Download starten</button>
                     </div>
-                    
-                    <div class="divide-y divide-white/5">
-                        <!-- Asset Item 1 -->
-                        <div class="p-5 flex items-center justify-between hover:bg-white/[0.02] transition">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-lg bg-zinc-900 flex items-center justify-center border border-white/5 text-lg">📄</div>
-                                <div>
-                                    <p class="font-bold text-sm">Sovereign Blueprint v2</p>
-                                    <p class="text-[10px] text-zinc-600 uppercase font-bold">PDF Masterfile</p>
-                                </div>
-                            </div>
-                            <button class="gold-bg text-black px-5 py-2 rounded-lg font-black text-[10px] uppercase hover:opacity-90 transition">Download</button>
+                    <div class="mt-6 hidden download-progress-container">
+                        <div class="flex justify-between text-[10px] font-black uppercase mb-2">
+                            <span class="text-zinc-500 italic">Verschlüsselung wird aufgebaut...</span>
+                            <span class="gold-gradient percent-text">0%</span>
                         </div>
-
-                        <!-- Asset Item 2 -->
-                        <div class="p-5 flex items-center justify-between hover:bg-white/[0.02] transition">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-lg bg-zinc-900 flex items-center justify-center border border-white/5 text-lg">📦</div>
-                                <div>
-                                    <p class="font-bold text-sm">Tech-Stack Deployment</p>
-                                    <p class="text-[10px] text-zinc-600 uppercase font-bold">ZIP Archiv • 45MB</p>
-                                </div>
-                            </div>
-                            <button class="gold-bg text-black px-5 py-2 rounded-lg font-black text-[10px] uppercase hover:opacity-90 transition">Download</button>
-                        </div>
-
-                        <!-- Locked Asset -->
-                        <div class="p-5 flex items-center justify-between opacity-30 cursor-not-allowed">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-lg bg-zinc-950 flex items-center justify-center border border-white/5 text-lg">🔒</div>
-                                <div>
-                                    <p class="font-bold text-sm italic">Shadow VSL Add-on</p>
-                                    <p class="text-[10px] text-zinc-700 uppercase font-bold">Gott-Modus erforderlich</p>
-                                </div>
-                            </div>
-                            <span class="text-[9px] font-black text-zinc-700 uppercase tracking-widest mr-4">Gesperrt</span>
+                        <div class="w-full bg-white/5 h-[2px] rounded-full">
+                            <div class="progress-bar"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- ADVICE BOX -->
-                <div class="mt-8 p-8 rounded-3xl bg-gradient-to-r from-[#D4AF37]/5 to-transparent border border-[#D4AF37]/10">
-                    <div class="flex items-start gap-4">
-                        <div class="text-[#D4AF37] text-xl">💡</div>
-                        <div>
-                            <h4 class="text-xs font-black uppercase tracking-widest text-[#D4AF37] mb-1">Commander Hinweis</h4>
-                            <p class="text-zinc-400 text-xs leading-relaxed max-w-xl">
-                                Dein System ist aktuell auf dem neuesten Stand. Vergiss nicht, deine Backups wöchentlich zu validieren, um die volle Souveränität über deine Kundendaten zu behalten.
-                            </p>
+                <!-- Asset Item 2 -->
+                <div class="glass-card p-8 group">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div class="flex items-center gap-6">
+                            <div class="w-16 h-16 rounded-2xl bg-zinc-900 border border-white/10 flex items-center justify-center text-3xl group-hover:scale-110 transition duration-500">📄</div>
+                            <div>
+                                <h3 class="text-xl font-800 italic uppercase">The Sovereign Blueprint (PDF)</h3>
+                                <p class="text-xs text-zinc-500 mt-1">Vollständiges Playbook: Von 0 auf 100k Monthly Recurring Revenue.</p>
+                            </div>
+                        </div>
+                        <button onclick="simulateDownload(this, 'Blueprint')" class="bg-white/5 border border-white/10 text-white px-10 py-4 rounded-2xl font-black text-xs uppercase italic tracking-widest hover:bg-white/10 transition active:scale-95">Download PDF</button>
+                    </div>
+                    <div class="mt-6 hidden download-progress-container">
+                        <div class="flex justify-between text-[10px] font-black uppercase mb-2">
+                            <span class="text-zinc-500 italic">Analysiere Berechtigung...</span>
+                            <span class="gold-gradient percent-text">0%</span>
+                        </div>
+                        <div class="w-full bg-white/5 h-[2px] rounded-full">
+                            <div class="progress-bar"></div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Shadow VSL Section -->
+                <div class="glass-card p-10 bg-gradient-to-r from-[#D4AF37]/10 to-transparent border-[#D4AF37]/20 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-8 opacity-5 text-8xl">👑</div>
+                    <h3 class="text-2xl font-800 italic uppercase mb-4 gold-gradient">Shadow VSL Assets</h3>
+                    <p class="text-zinc-400 text-sm max-w-xl mb-8 leading-relaxed">Diese Video-Assets sind exklusiv für Gott-Modus Nutzer. Sie enthalten die High-Conversion Skripte, die wir intern nutzen, um 5-stellige Abschlüsse zu erzielen.</p>
+                    <button onclick="alert('Dein persönliches Video-Paket wird gerade von unseren Editoren finalisiert. Verfügbar in ca. 24h.')" class="gold-gradient border border-[#D4AF37]/40 px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-[#D4AF37] hover:text-black transition">Paket anfordern</button>
                 </div>
 
             </div>
         </div>
     </main>
 
-    <footer class="mt-20 py-10 border-t border-white/5 text-center">
-        <p class="text-[9px] font-bold text-zinc-700 uppercase tracking-[0.5em]">Sovereign Protocol &copy; 2024 • Alle Rechte Vorbehalten</p>
-    </footer>
+    <script>
+        function simulateDownload(btn, name) {
+            const container = btn.closest('.glass-card').querySelector('.download-progress-container');
+            const bar = container.querySelector('.progress-bar');
+            const percentText = container.querySelector('.percent-text');
+            const toast = document.getElementById('toast');
 
+            // UI-Wechsel
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+            container.classList.remove('hidden');
+
+            // Fortschritt simulieren
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 15) + 5;
+                if(progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    // Erfolg
+                    toast.innerText = "SUCCESS: " + name + " heruntergeladen.";
+                    toast.style.display = 'block';
+                    btn.innerText = "Download Abgeschlossen";
+                    btn.classList.add('opacity-50');
+                    
+                    setTimeout(() => { toast.style.display = 'none'; }, 4000);
+                }
+                bar.style.width = progress + "%";
+                percentText.innerText = progress + "%";
+            }, 300);
+        }
+    </script>
 </body>
 </html>
