@@ -24,7 +24,7 @@ const App = () => {
   const scrollToPricing = () => {
     const element = document.getElementById('pricing-plans');
     if (element) {
-      const offset = 100; 
+      const offset = 80; 
       const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
       window.scrollTo({
         top: elementPosition - offset,
@@ -38,70 +38,70 @@ const App = () => {
       
       {/* BACKGROUND EFFECTS */}
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] opacity-20"
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] opacity-20"
              style={{ background: 'radial-gradient(circle at 50% 0%, #d4af37 0%, transparent 70%)' }}></div>
       </div>
 
       <div className={`${(showLogin || isLoggedIn) ? 'blur-md scale-[0.98] opacity-50' : 'scale-100 opacity-100'} transition-all duration-500 relative z-10`}>
         {/* Navigation */}
-        <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-black/90 backdrop-blur-md px-6 py-3">
-          <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <div className="text-xl font-black italic tracking-tighter uppercase">
+        <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-black/90 backdrop-blur-md px-6 py-2">
+          <div className="max-w-7xl mx-auto flex justify-between items-center px-6">
+            <div className="text-lg font-black italic tracking-tighter uppercase">
               SOV<span className="text-[#d4af37]">ER</span>EIGN
             </div>
             <button 
               onClick={() => setShowLogin(true)}
-              className="bg-[#d4af37] text-black px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
+              className="bg-[#d4af37] text-black px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
             >
               Access
             </button>
           </div>
         </nav>
 
-        {/* Hero Section - Compacted for visibility */}
-        <header className="pt-32 pb-12 px-6 text-center">
+        {/* Hero Section - Maximum Compactness */}
+        <header className="pt-24 pb-8 px-6 text-center">
           <div className="inline-block border border-[#d4af37]/30 bg-[#d4af37]/5 px-3 py-1 rounded-full mb-4">
-            <span className="text-[8px] font-bold text-[#d4af37] tracking-[0.3em] uppercase">Protocol v2.4</span>
+            <span className="text-[7px] font-bold text-[#d4af37] tracking-[0.3em] uppercase">Protocol v2.4</span>
           </div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black italic uppercase tracking-tighter leading-none mb-6">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-black italic uppercase tracking-tighter leading-none mb-4">
             DIGITAL <br/>
             <span className="bg-gradient-to-r from-[#d4af37] via-[#f5e0a3] to-[#b8860b] bg-clip-text text-transparent">SOVEREIGNTY</span>
           </h1>
-          <p className="text-gray-400 text-sm md:text-base max-w-lg mx-auto mb-8 font-medium">
+          <p className="text-gray-400 text-xs md:text-sm max-w-md mx-auto mb-6 font-medium">
             Erbaue ein unantastbares Imperium mit technischer Dominanz.
           </p>
           <button 
             onClick={scrollToPricing}
-            className="bg-white text-black px-8 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-[#d4af37] transition-all active:scale-95 shadow-xl"
+            className="bg-white text-black px-6 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-[#d4af37] transition-all active:scale-95 shadow-xl"
           >
             Pläne ansehen
           </button>
         </header>
 
-        {/* PRICING SECTION - MAXIMUM VISIBILITY FIX */}
-        <section id="pricing-plans" className="max-w-5xl mx-auto px-6 py-8">
-          <div className="grid md:grid-cols-2 gap-6 items-stretch">
+        {/* PRICING SECTION - PUSHED UP FOR VISIBILITY */}
+        <section id="pricing-plans" className="max-w-5xl mx-auto px-6 py-4 mb-12">
+          <div className="grid md:grid-cols-2 gap-4 items-stretch">
             
             {/* Elite Plan */}
-            <div className="flex flex-col bg-[#0d0d0d] border border-white/10 rounded-[24px] overflow-hidden hover:border-[#d4af37]/40 transition-all group">
-              <div className="p-6 md:p-8 flex-grow">
-                <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1">Phase I</p>
-                <h3 className="text-2xl font-black italic uppercase mb-4">Elite Access</h3>
-                <div className="text-3xl font-black mb-6">2.997 € <span className="text-[9px] font-normal text-gray-500 block tracking-widest uppercase">Einmalig</span></div>
+            <div className="flex flex-col bg-[#0d0d0d] border border-white/10 rounded-[20px] overflow-hidden hover:border-[#d4af37]/40 transition-all group">
+              <div className="p-5 flex-grow">
+                <p className="text-[8px] font-bold text-gray-500 uppercase tracking-widest mb-1">Phase I</p>
+                <h3 className="text-xl font-black italic uppercase mb-2">Elite Access</h3>
+                <div className="text-2xl font-black mb-4">2.997 € <span className="text-[8px] font-normal text-gray-500 inline-block ml-1 tracking-widest uppercase">Einmalig</span></div>
                 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {['White-Label SaaS Master-Lizenz', 'Core Protocol Infrastructure', 'Premium Landing Page Assets', 'Strategischer Support'].map(item => (
-                    <div key={item} className="flex items-center gap-3">
+                    <div key={item} className="flex items-center gap-2">
                       <CheckIcon />
-                      <span className="text-gray-400 font-bold text-xs uppercase tracking-tight">{item}</span>
+                      <span className="text-gray-400 font-bold text-[10px] uppercase tracking-tight">{item}</span>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="p-6 pt-0">
+              <div className="p-5 pt-0">
                 <button 
                   onClick={() => window.open('https://www.digistore24.com/product/676462?vendor=sooonic008', '_blank')}
-                  className="w-full py-4 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all"
+                  className="w-full py-3 bg-white/5 border border-white/10 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all"
                 >
                   Wählen
                 </button>
@@ -109,28 +109,28 @@ const App = () => {
             </div>
 
             {/* Gott-Modus Plan */}
-            <div className="flex flex-col bg-[#0d0d0d] border-2 border-[#d4af37] rounded-[24px] overflow-hidden relative shadow-2xl shadow-[#d4af37]/5 transform transition-transform hover:scale-[1.01]">
-              <div className="absolute top-4 right-6 bg-[#d4af37] text-black px-3 py-0.5 rounded-full text-[7px] font-black uppercase tracking-tighter">
+            <div className="flex flex-col bg-[#0d0d0d] border-2 border-[#d4af37] rounded-[20px] overflow-hidden relative shadow-2xl shadow-[#d4af37]/5 transform transition-transform hover:scale-[1.01]">
+              <div className="absolute top-3 right-4 bg-[#d4af37] text-black px-2 py-0.5 rounded-full text-[6px] font-black uppercase tracking-tighter">
                 Most Popular
               </div>
-              <div className="p-6 md:p-8 flex-grow">
-                <p className="text-[9px] font-bold text-[#d4af37] uppercase tracking-widest mb-1">Phase II</p>
-                <h3 className="text-2xl font-black italic uppercase mb-4">Gott-Modus</h3>
-                <div className="text-3xl font-black text-[#d4af37] mb-6">5.997 € <span className="text-[9px] font-normal text-white/40 block tracking-widest uppercase">Einmalig</span></div>
+              <div className="p-5 flex-grow">
+                <p className="text-[8px] font-bold text-[#d4af37] uppercase tracking-widest mb-1">Phase II</p>
+                <h3 className="text-xl font-black italic uppercase mb-2">Gott-Modus</h3>
+                <div className="text-2xl font-black text-[#d4af37] mb-4">5.997 € <span className="text-[8px] font-normal text-white/40 inline-block ml-1 tracking-widest uppercase">Einmalig</span></div>
                 
-                <div className="space-y-3">
-                  {['Full Tech-Setup durch Experten', 'Shadow VSL Integration', 'Custom Funnel Architecture', 'Lifetime Partnership'].map(item => (
-                    <div key={item} className="flex items-center gap-3">
+                <div className="space-y-2">
+                  {['Full Tech-Setup (DFY)', 'Shadow VSL Integration', 'Custom Funnel Architecture', 'Lifetime Partnership'].map(item => (
+                    <div key={item} className="flex items-center gap-2">
                       <StarIcon />
-                      <span className="text-white font-bold text-xs uppercase tracking-tight">{item}</span>
+                      <span className="text-white font-bold text-[10px] uppercase tracking-tight">{item}</span>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="p-6 pt-0">
+              <div className="p-5 pt-0">
                 <button 
                   onClick={() => window.open('https://www.digistore24.com/product/676464?vendor=sooonic008', '_blank')}
-                  className="w-full py-4 bg-[#d4af37] text-black rounded-xl text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-lg"
+                  className="w-full py-3 bg-[#d4af37] text-black rounded-lg text-[9px] font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-lg"
                 >
                   Dominanz Sichern
                 </button>
@@ -140,12 +140,12 @@ const App = () => {
           </div>
         </section>
 
-        <footer className="py-12 text-center opacity-20 text-[8px] font-black tracking-[0.4em] uppercase">
+        <footer className="py-8 text-center opacity-20 text-[7px] font-black tracking-[0.4em] uppercase">
           Sovereign Protocol &copy; 2024
         </footer>
       </div>
 
-      {/* LOGIN & DASHBOARD (Unchanged Logic, Simplified UI) */}
+      {/* LOGIN & DASHBOARD */}
       {showLogin && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/95 backdrop-blur-md">
           <div className="w-full max-w-xs bg-[#0d0d0d] border border-white/10 rounded-[30px] p-8 shadow-2xl">
