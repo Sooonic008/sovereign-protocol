@@ -70,63 +70,69 @@ const App = () => {
           </button>
         </header>
 
-        {/* PRICING SECTION - FIXED BUTTONS VISIBILITY */}
-        <section id="plans" className="max-w-7xl mx-auto px-6 py-32 grid md:grid-cols-2 gap-10 items-stretch">
-          
-          {/* Elite Access Card */}
-          <div className="bg-[#0a0a0a] border border-white/5 p-8 md:p-10 rounded-[40px] hover:border-[#d4af37]/30 transition-all group flex flex-col justify-between h-full min-h-[600px]">
-            <div>
-              <div className="mb-8">
-                <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-2">Stufe I</p>
-                <h3 className="text-4xl font-black italic uppercase mb-4 text-gray-200">Elite Access</h3>
-                <div className="text-5xl font-black">2.997 € <span className="text-sm font-normal text-gray-500 tracking-normal">+ MwSt.</span></div>
+        {/* PRICING SECTION - RADICAL FIX FOR BUTTON VISIBILITY */}
+        <section id="plans" className="max-w-7xl mx-auto px-6 py-24">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+            
+            {/* Elite Access Card */}
+            <div className="bg-[#0a0a0a] border border-white/5 p-8 md:p-12 rounded-[40px] hover:border-[#d4af37]/30 transition-all flex flex-col min-h-[650px]">
+              <div className="flex-grow">
+                <div className="mb-8">
+                  <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-2">Stufe I</p>
+                  <h3 className="text-4xl font-black italic uppercase mb-4 text-gray-200">Elite Access</h3>
+                  <div className="text-5xl font-black">2.997 € <span className="text-sm font-normal text-gray-500 tracking-normal">+ MwSt.</span></div>
+                </div>
+                
+                <ul className="space-y-6 mb-12">
+                  {['White-Label SaaS Master-Lizenz', 'Core Protocol Infrastructure', 'Premium Landing Page Assets', 'Strategischer Support Blueprint'].map(t => (
+                    <li key={t} className="flex items-start gap-4 text-gray-400 font-bold text-base leading-tight">
+                      <div className="mt-1 flex-shrink-0"><CheckIcon /></div> {t}
+                    </li>
+                  ))}
+                </ul>
               </div>
               
-              <ul className="space-y-5 mb-12">
-                {['White-Label SaaS Master-Lizenz', 'Core Protocol Infrastructure', 'Premium Landing Page Assets', 'Strategischer Support Blueprint'].map(t => (
-                  <li key={t} className="flex items-start gap-4 text-gray-400 font-bold text-base leading-tight">
-                    <div className="mt-1 flex-shrink-0"><CheckIcon /></div> {t}
-                  </li>
-                ))}
-              </ul>
+              <div className="pt-8 mt-auto border-t border-white/5">
+                <button 
+                    onClick={() => window.open('https://www.digistore24.com/product/676462?vendor=sooonic008', '_blank')}
+                    className="w-full py-6 bg-white/5 border border-white/10 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-[#d4af37] hover:text-black hover:border-[#d4af37] transition-all duration-300 shadow-xl"
+                >
+                  Elite Plan wählen
+                </button>
+              </div>
             </div>
-            
-            <button 
-                onClick={() => window.open('https://www.digistore24.com/product/676462?vendor=sooonic008', '_blank')}
-                className="w-full py-5 bg-white/5 border border-white/10 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-[#d4af37] hover:text-black hover:border-[#d4af37] transition-all duration-300 relative z-10"
-            >
-              Elite Plan wählen
-            </button>
-          </div>
 
-          {/* Gott-Modus Card */}
-          <div className="bg-[#0a0a0a] border-2 border-[#d4af37] p-8 md:p-10 rounded-[40px] relative shadow-2xl shadow-[#d4af37]/10 flex flex-col justify-between h-full min-h-[600px]">
-            <div className="absolute -top-4 right-10 bg-[#d4af37] text-black px-5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter z-20">
-              Maximaler Impact
-            </div>
-            
-            <div>
-              <div className="mb-8">
-                <p className="text-[11px] font-bold text-[#d4af37] uppercase tracking-widest mb-2">Stufe II</p>
-                <h3 className="text-4xl font-black italic uppercase mb-4 text-white">Gott-Modus</h3>
-                <div className="text-5xl font-black text-[#d4af37]">5.997 € <span className="text-sm font-normal text-gray-400 tracking-normal text-white">+ MwSt.</span></div>
+            {/* Gott-Modus Card */}
+            <div className="bg-[#0a0a0a] border-2 border-[#d4af37] p-8 md:p-12 rounded-[40px] relative shadow-2xl shadow-[#d4af37]/10 flex flex-col min-h-[650px]">
+              <div className="absolute -top-4 right-10 bg-[#d4af37] text-black px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-tighter z-20">
+                Maximaler Impact
               </div>
               
-              <ul className="space-y-5 mb-12">
-                {['Full Tech-Setup durch Experten (DFY)', 'Shadow VSL & Sales-Asset Integration', 'Custom Funnel Architecture Tuning', 'Lifetime Strategic Partnership'].map(t => (
-                  <li key={t} className="flex items-start gap-4 text-white font-bold text-base leading-tight">
-                    <div className="mt-1 flex-shrink-0"><StarIcon /></div> {t}
-                  </li>
-                ))}
-              </ul>
+              <div className="flex-grow">
+                <div className="mb-8">
+                  <p className="text-[11px] font-bold text-[#d4af37] uppercase tracking-widest mb-2">Stufe II</p>
+                  <h3 className="text-4xl font-black italic uppercase mb-4 text-white">Gott-Modus</h3>
+                  <div className="text-5xl font-black text-[#d4af37]">5.997 € <span className="text-sm font-normal text-gray-400 tracking-normal text-white">+ MwSt.</span></div>
+                </div>
+                
+                <ul className="space-y-6 mb-12">
+                  {['Full Tech-Setup durch Experten (DFY)', 'Shadow VSL & Sales-Asset Integration', 'Custom Funnel Architecture Tuning', 'Lifetime Strategic Partnership'].map(t => (
+                    <li key={t} className="flex items-start gap-4 text-white font-bold text-base leading-tight">
+                      <div className="mt-1 flex-shrink-0"><StarIcon /></div> {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div className="pt-8 mt-auto border-t border-[#d4af37]/10">
+                <button 
+                    onClick={() => window.open('https://www.digistore24.com/product/676464?vendor=sooonic008', '_blank')}
+                    className="w-full py-6 bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-black rounded-2xl text-[12px] font-black uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-2xl"
+                >
+                  Dominanz Sichern
+                </button>
+              </div>
             </div>
-            
-            <button 
-                onClick={() => window.open('https://www.digistore24.com/product/676464?vendor=sooonic008', '_blank')}
-                className="w-full py-5 bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-black rounded-2xl text-[11px] font-black uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-xl relative z-10"
-            >
-              Dominanz Sichern
-            </button>
           </div>
         </section>
 
