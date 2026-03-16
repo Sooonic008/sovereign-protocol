@@ -1,199 +1,209 @@
 import React, { useState, useEffect } from 'react';
 
 // Icons als SVG-Komponenten
-const CheckIcon = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>;
-const StarIcon = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="#d4af37"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>;
-const ShieldIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
+const ShieldCheckIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>;
 const ActivityIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>;
+const GlobeIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>;
+const ZapIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>;
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
   const [pin, setPin] = useState('');
-  const [metrics, setMetrics] = useState({ revenue: 124500, users: 842, uptime: '99.98%' });
-
-  // Direkte Links für die Buttons
-  const buyElite = () => window.open('https://www.digistore24.com/product/676462?vendor=sooonic008', '_blank');
-  const buyGod = () => window.open('https://www.digistore24.com/product/676464?vendor=sooonic008', '_blank');
+  const [metrics, setMetrics] = useState({ revenue: 248900, users: 1242, uptime: '99.99%' });
+  const [loginError, setLoginError] = useState(false);
 
   const handleLogin = (val) => {
-    if (val === '2024') { // Einfacher Demo-PIN
+    setPin(val);
+    if (val === '2024') { 
       setIsLoggedIn(true);
-      setShowLogin(false);
+      setLoginError(false);
+    } else if (val.length === 4) {
+      setLoginError(true);
+      setTimeout(() => setLoginError(false), 2000);
     }
   };
 
   if (isLoggedIn) {
     return (
-      <div className="min-h-screen bg-[#050505] text-white p-4 md:p-8 font-sans antialiased">
+      <div className="min-h-screen bg-[#020202] text-white p-4 md:p-10 font-sans antialiased">
         {/* Dashboard Header */}
-        <header className="max-w-7xl mx-auto flex justify-between items-center mb-12 border-b border-white/5 pb-6">
-          <div>
-            <h1 className="text-2xl font-black italic uppercase tracking-tighter">SOV<span className="text-[#d4af37]">ER</span>EIGN <span className="text-xs ml-2 text-zinc-500 font-bold tracking-widest bg-zinc-900 px-3 py-1 rounded-full">CORE V2.4</span></h1>
-            <p className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-1">Sytem-Status: <span className="text-green-500">Aktiv</span></p>
+        <header className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-[#d4af37]/10 border border-[#d4af37]/30 rounded-2xl flex items-center justify-center">
+              <ShieldCheckIcon />
+            </div>
+            <div>
+              <h1 className="text-3xl font-black italic uppercase tracking-tighter">SOV<span className="text-[#d4af37]">ER</span>EIGN</h1>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em]">Kommando-Zentrale <span className="text-zinc-700">|</span> v2.4.0-Stable</p>
+              </div>
+            </div>
           </div>
-          <button onClick={() => setIsLoggedIn(false)} className="text-[10px] font-black uppercase tracking-widest bg-white/5 border border-white/10 px-4 py-2 rounded-xl hover:bg-red-500/20 hover:border-red-500/50 transition-all">Logout</button>
+          <div className="flex gap-4">
+            <div className="hidden md:block text-right">
+              <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest">Master Admin</p>
+              <p className="text-[11px] font-black text-white italic">root@sovereign.core</p>
+            </div>
+            <button onClick={() => setIsLoggedIn(false)} className="bg-white/5 border border-white/10 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-500/20 hover:border-red-500/50 transition-all">Sitzung beenden</button>
+          </div>
         </header>
 
-        <main className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Metric Cards */}
-          <div className="bg-[#0a0a0a] border border-[#d4af37]/30 p-6 rounded-3xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><ShieldIcon /></div>
-            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Brutto-Umsatz (30T)</p>
-            <h2 className="text-3xl font-black text-[#d4af37] italic">{metrics.revenue.toLocaleString()} €</h2>
-            <div className="mt-4 h-1 w-full bg-zinc-900 rounded-full overflow-hidden">
-                <div className="h-full bg-[#d4af37] w-[75%] shadow-[0_0_10px_#d4af37]"></div>
-            </div>
-          </div>
-
-          <div className="bg-[#0a0a0a] border border-white/5 p-6 rounded-3xl">
-            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">Aktive Protokoll-Nutzer</p>
-            <h2 className="text-3xl font-black italic">{metrics.users}</h2>
-            <p className="text-[10px] text-green-500 font-bold mt-2">+12% seit Vorwoche</p>
-          </div>
-
-          <div className="bg-[#0a0a0a] border border-white/5 p-6 rounded-3xl">
-            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1">System-Uptime</p>
-            <h2 className="text-3xl font-black italic text-zinc-300">{metrics.uptime}</h2>
-            <div className="flex gap-1 mt-3">
-                {[1,2,3,4,5,6,7,8,9,10].map(i => <div key={i} className="h-4 w-1 bg-green-500/50 rounded-full animate-pulse" style={{animationDelay: `${i*100}ms`}}></div>)}
-            </div>
-          </div>
-
-          {/* Infrastructure Feed */}
-          <div className="md:col-span-2 bg-[#0a0a0a] border border-white/5 rounded-3xl p-8">
-            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-500 mb-6 flex items-center gap-2"><ActivityIcon /> Globale Infrastruktur</h3>
-            <div className="space-y-4">
-              {[
-                { label: 'SaaS Master API', status: 'Online', load: '12%' },
-                { label: 'Shadow VSL Engine', status: 'Bereit', load: '04%' },
-                { label: 'Auth Gateway', status: 'Online', load: '08%' },
-                { label: 'Database Cluster', status: 'Synchron', load: '15%' }
-              ].map(item => (
-                <div key={item.label} className="flex items-center justify-between p-4 bg-black/40 border border-white/5 rounded-2xl hover:border-[#d4af37]/20 transition-all cursor-default group">
-                  <div className="flex items-center gap-4">
-                    <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]"></div>
-                    <span className="text-xs font-bold uppercase tracking-widest">{item.label}</span>
-                  </div>
-                  <div className="flex items-center gap-8">
-                    <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-tighter">Load: {item.load}</span>
-                    <span className="text-[9px] font-black text-white px-3 py-1 bg-zinc-800 rounded-lg group-hover:bg-[#d4af37] group-hover:text-black transition-colors">{item.status}</span>
-                  </div>
+        <main className="max-w-7xl mx-auto space-y-8">
+          {/* Main Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            
+            {/* Metric Card 1 */}
+            <div className="bg-[#080808] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden group">
+              <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <ZapIcon />
+              </div>
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Gesamt-Umsatz</p>
+              <h2 className="text-4xl font-black text-[#d4af37] italic tracking-tighter">{metrics.revenue.toLocaleString()} €</h2>
+              <div className="mt-4 flex items-center gap-2">
+                <span className="text-[10px] text-green-500 font-bold">+18.4%</span>
+                <div className="h-0.5 flex-grow bg-zinc-900 rounded-full overflow-hidden">
+                    <div className="h-full bg-green-500 w-[60%]"></div>
                 </div>
-              ))}
+              </div>
+            </div>
+
+            {/* Metric Card 2 */}
+            <div className="bg-[#080808] border border-white/5 p-8 rounded-[2.5rem]">
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Aktive Einheiten</p>
+              <h2 className="text-4xl font-black italic tracking-tighter">{metrics.users}</h2>
+              <p className="text-[10px] text-zinc-500 mt-4 uppercase font-bold tracking-tighter italic">Weltweite Deployments</p>
+            </div>
+
+            {/* Metric Card 3 */}
+            <div className="bg-[#080808] border border-white/5 p-8 rounded-[2.5rem]">
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Netzwerk-Integrität</p>
+              <h2 className="text-4xl font-black italic tracking-tighter text-zinc-300">{metrics.uptime}</h2>
+              <div className="flex gap-1.5 mt-4">
+                {[1,2,3,4,5,6,7,8].map(i => <div key={i} className="h-5 w-1.5 bg-green-500/30 rounded-full animate-pulse" style={{animationDelay: `${i*150}ms`}}></div>)}
+              </div>
+            </div>
+
+            {/* Metric Card 4 */}
+            <div className="bg-[#080808] border border-[#d4af37]/20 p-8 rounded-[2.5rem] flex flex-col justify-center">
+              <div className="flex items-center gap-3 mb-2">
+                <GlobeIcon />
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#d4af37]">Geo-Sync</span>
+              </div>
+              <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-tighter">Alle Knotenpunkte aktiv und synchronisiert.</p>
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-8">
-            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-500 mb-6 italic">Quick Actions</h3>
-            <div className="grid gap-3">
-              <button className="w-full py-4 bg-white text-black rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#d4af37] transition-all">Deployment starten</button>
-              <button className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-zinc-800 transition-all border border-white/5">Daten-Export (CSV)</button>
-              <button className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-zinc-800 transition-all border border-white/5">API Keys verwalten</button>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+            {/* Infrastructure Monitor */}
+            <div className="lg:col-span-2 bg-[#080808] border border-white/5 rounded-[3rem] p-10">
+              <div className="flex justify-between items-center mb-10">
+                <h3 className="text-xs font-black uppercase tracking-[0.4em] text-zinc-500 flex items-center gap-3 italic"><ActivityIcon /> System-Infrastruktur</h3>
+                <span className="px-4 py-1.5 bg-green-500/10 border border-green-500/20 text-green-500 text-[9px] font-black uppercase rounded-full">Optimiert</span>
+              </div>
+              
+              <div className="space-y-6">
+                {[
+                  { name: 'SaaS Master Control', status: 'Online', load: 12 },
+                  { name: 'Shadow VSL Processor', status: 'Bereit', load: 4 },
+                  { name: 'Quantum Auth API', status: 'Aktiv', load: 28 },
+                  { name: 'Global Database Cluster', status: 'Sync', load: 15 }
+                ].map(sys => (
+                  <div key={sys.name} className="flex flex-col md:flex-row md:items-center justify-between p-6 bg-black/50 border border-white/5 rounded-3xl group hover:border-[#d4af37]/30 transition-all duration-500">
+                    <div className="flex items-center gap-4 mb-4 md:mb-0">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></div>
+                      <span className="text-xs font-black uppercase tracking-widest group-hover:text-[#d4af37] transition-colors">{sys.name}</span>
+                    </div>
+                    <div className="flex items-center gap-12">
+                      <div className="hidden md:block w-32">
+                        <div className="flex justify-between mb-1">
+                          <span className="text-[8px] uppercase font-bold text-zinc-600">Load</span>
+                          <span className="text-[8px] uppercase font-bold text-zinc-400">{sys.load}%</span>
+                        </div>
+                        <div className="h-1 bg-zinc-900 rounded-full overflow-hidden">
+                          <div className="h-full bg-zinc-500" style={{width: `${sys.load}%`}}></div>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-black text-white px-5 py-2 bg-zinc-800 rounded-xl group-hover:bg-[#d4af37] group-hover:text-black transition-all uppercase tracking-widest">{sys.status}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="mt-8 p-4 bg-[#d4af37]/5 border border-[#d4af37]/20 rounded-2xl">
-                <p className="text-[9px] font-bold text-[#d4af37] leading-relaxed uppercase">Du bist im <span className="underline">Admin-Modus</span>. Alle Änderungen wirken sich direkt auf die Live-Infrastruktur aus.</p>
+
+            {/* Security Log */}
+            <div className="bg-[#080808] border border-white/5 rounded-[3rem] p-10 overflow-hidden relative">
+              <h3 className="text-xs font-black uppercase tracking-[0.4em] text-zinc-500 mb-8 italic">Letzte Ereignisse</h3>
+              <div className="space-y-6 relative z-10">
+                {[
+                  { time: '14:02', event: 'API-Key generiert', type: 'info' },
+                  { time: '13:45', event: 'Backup abgeschlossen', type: 'success' },
+                  { time: '12:20', event: 'Neue Node registriert', type: 'info' },
+                  { time: '10:11', event: 'Sicherheits-Scan 100%', type: 'success' },
+                  { time: '09:04', event: 'Login von IP: 192.168.1.1', type: 'warning' }
+                ].map((log, i) => (
+                  <div key={i} className="flex gap-4 border-l border-zinc-900 pl-4 py-1">
+                    <span className="text-[9px] font-bold text-zinc-600 font-mono">{log.time}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-tighter text-zinc-400">{log.event}</span>
+                  </div>
+                ))}
+              </div>
+              <button className="w-full mt-12 py-4 bg-zinc-900 border border-white/5 rounded-2xl text-[9px] font-black uppercase tracking-widest hover:bg-white/5 transition-all">Gesamtes Log einsehen</button>
             </div>
           </div>
         </main>
+
+        <footer className="max-w-7xl mx-auto mt-20 text-center opacity-20">
+          <p className="text-[8px] font-black tracking-[0.8em] uppercase italic">Encrypted Connection - Secure Master Access Only</p>
+        </footer>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-[#d4af37] selection:text-black antialiased">
-      
-      {/* Ultra-Kompakte Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/5 py-2">
-        <div className="max-w-6xl mx-auto flex justify-between items-center px-6">
-          <div className="text-base font-black italic tracking-tighter uppercase text-white">SOV<span className="text-[#d4af37]">ER</span>EIGN</div>
-          <button onClick={() => setShowLogin(true)} className="text-[8px] font-bold border border-white/20 px-4 py-1.5 rounded-full uppercase tracking-widest hover:bg-white/10 transition-all">Launch Console</button>
+    <div className="min-h-screen bg-[#020202] text-white flex flex-col items-center justify-center p-6 font-sans antialiased">
+      {/* Background Decor */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#d4af37]/5 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[120px]"></div>
+      </div>
+
+      <div className="w-full max-w-md relative z-10">
+        <div className="text-center mb-12">
+            <h1 className="text-4xl font-black italic uppercase tracking-tighter mb-2">SOV<span className="text-[#d4af37]">ER</span>EIGN</h1>
+            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.4em]">Infrastruktur Zugang</p>
         </div>
-      </nav>
 
-      {/* Hero - Extrem flach für sofortigen Fokus auf die Angebote */}
-      <header className="pt-20 pb-4 px-6 text-center bg-gradient-to-b from-[#d4af37]/10 to-transparent">
-        <h1 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter mb-1">DIGITAL SOVEREIGNTY</h1>
-        <p className="text-gray-400 text-[10px] uppercase tracking-[0.2em] font-bold">Wähle deine Stufe zur Dominanz</p>
-      </header>
+        <div className={`bg-[#080808] border ${loginError ? 'border-red-500/50 shadow-[0_0_40px_rgba(239,68,68,0.1)]' : 'border-[#d4af37]/20 shadow-[0_0_40px_rgba(212,175,55,0.05)]'} p-12 rounded-[3rem] transition-all duration-300`}>
+          <div className="flex justify-center mb-8">
+            <div className={`w-16 h-16 rounded-3xl flex items-center justify-center border transition-all duration-500 ${loginError ? 'bg-red-500/10 border-red-500/30' : 'bg-[#d4af37]/10 border-[#d4af37]/30'}`}>
+              <ShieldCheckIcon />
+            </div>
+          </div>
 
-      {/* Pricing Cards - Jetzt direkt im Sichtfeld */}
-      <main className="max-w-5xl mx-auto px-4 pb-8">
-        <div className="grid md:grid-cols-2 gap-4 items-stretch">
+          <p className="text-center text-[9px] font-bold text-zinc-500 uppercase tracking-widest mb-8 italic">Autorisierung erforderlich</p>
           
-          {/* Elite Card */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-6 flex flex-col hover:border-[#d4af37]/50 transition-all shadow-xl group">
-            <div className="mb-4">
-              <span className="text-[8px] font-black text-gray-500 uppercase tracking-[0.3em] mb-1 block">Phase I</span>
-              <h2 className="text-2xl font-black italic uppercase leading-none group-hover:text-[#d4af37] transition-colors">Elite Access</h2>
-              <div className="text-2xl font-black text-white mt-1">2.997 €</div>
-            </div>
-            
-            <ul className="space-y-2 mb-8 flex-grow">
-              {['White-Label SaaS Lizenz', 'Core Infrastructure', 'Landing Page Assets', 'Strategischer Support'].map(item => (
-                <li key={item} className="flex items-center gap-3 text-[10px] font-bold uppercase text-gray-400">
-                  <CheckIcon /> {item}
-                </li>
-              ))}
-            </ul>
-
-            <button onClick={buyElite} className="w-full py-4 bg-white text-black rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-[#d4af37] transition-colors shadow-lg active:scale-95">
-              Plan Wählen
-            </button>
-          </div>
-
-          {/* Gott-Modus Card */}
-          <div className="bg-[#0a0a0a] border-2 border-[#d4af37] rounded-3xl p-6 flex flex-col relative shadow-[0_0_50px_rgba(212,175,55,0.1)] z-10 scale-[1.02]">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#d4af37] text-black px-4 py-1 rounded-full text-[8px] font-black uppercase tracking-widest shadow-[0_0_20px_#d4af37]">Empfohlen</div>
-            <div className="mb-4">
-              <span className="text-[8px] font-black text-[#d4af37] uppercase tracking-[0.3em] mb-1 block">Phase II</span>
-              <h2 className="text-2xl font-black italic uppercase leading-none text-[#d4af37]">Gott-Modus</h2>
-              <div className="text-2xl font-black text-white mt-1">5.997 €</div>
-            </div>
-            
-            <ul className="space-y-2 mb-8 flex-grow">
-              {['Full Tech-Setup (DFY)', 'Shadow VSL Integration', 'Funnel Architecture', 'Lifetime Partnership'].map(item => (
-                <li key={item} className="flex items-center gap-3 text-[10px] font-bold uppercase text-white">
-                  <StarIcon /> {item}
-                </li>
-              ))}
-            </ul>
-
-            <button onClick={buyGod} className="w-full py-4 bg-[#d4af37] text-black rounded-2xl font-black uppercase text-[10px] tracking-widest hover:brightness-110 transition-all shadow-lg shadow-[#d4af37]/30 active:scale-95">
-              Dominanz Sichern
-            </button>
-          </div>
-
-        </div>
-      </main>
-
-      {/* Kompakter Footer */}
-      <footer className="py-6 text-center opacity-30 text-[7px] font-black tracking-[0.5em] uppercase">
-        Sovereign Protocol &copy; 2024 | Digital Independence Guaranteed
-      </footer>
-
-      {/* Login Modal */}
-      {showLogin && (
-        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-6 backdrop-blur-md">
-          <div className="w-full max-w-xs bg-zinc-900 border border-[#d4af37]/30 p-8 rounded-[2.5rem] shadow-[0_0_100px_rgba(212,175,55,0.1)]">
-            <div className="w-12 h-12 bg-[#d4af37]/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <ShieldIcon />
-            </div>
-            <h3 className="text-center font-black uppercase italic mb-2 text-base">Security Check</h3>
-            <p className="text-[8px] text-zinc-500 uppercase tracking-widest text-center mb-6">Gib deinen 4-stelligen Founder-PIN ein</p>
+          <div className="space-y-6">
             <input 
               type="password" 
-              placeholder="••••" 
+              placeholder="SECRET PIN" 
               maxLength="4"
-              className="w-full bg-black border border-white/10 p-4 rounded-2xl text-center text-2xl tracking-[0.5em] mb-6 text-white focus:border-[#d4af37] outline-none transition-all shadow-inner"
+              className={`w-full bg-black border ${loginError ? 'border-red-500/30' : 'border-white/10'} p-5 rounded-2xl text-center text-3xl tracking-[0.6em] font-black focus:border-[#d4af37] outline-none transition-all shadow-inner placeholder:text-zinc-800`}
               onChange={(e) => handleLogin(e.target.value)}
               autoFocus
             />
-            <button onClick={() => setShowLogin(false)} className="w-full text-[9px] font-bold uppercase text-zinc-600 hover:text-white transition-colors">Abbrechen</button>
+            {loginError && <p className="text-center text-[9px] font-black text-red-500 uppercase tracking-widest animate-pulse">Zugriff Verweigert</p>}
+          </div>
+
+          <div className="mt-12 flex flex-col gap-6 text-center">
+            <p className="text-[8px] text-zinc-600 font-bold uppercase tracking-widest leading-relaxed">
+              Jeder unbefugte Zugriff wird protokolliert und strafrechtlich verfolgt.
+            </p>
+            <div className="h-px bg-gradient-to-r from-transparent via-zinc-900 to-transparent"></div>
+            <p className="text-[8px] text-zinc-400 font-black uppercase tracking-widest italic">Protocol v2.4.0</p>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
