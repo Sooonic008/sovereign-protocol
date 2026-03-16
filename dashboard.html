@@ -11,7 +11,6 @@ const App = () => {
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
 
-  // Login Logik
   const handleLoginSubmit = (e) => {
     e.preventDefault();
     if (pin === 'sovereign2024') {
@@ -23,7 +22,6 @@ const App = () => {
     }
   };
 
-  // Scroll-Lock wenn Login offen
   useEffect(() => {
     document.body.style.overflow = (showLogin || isLoggedIn) ? 'hidden' : 'auto';
   }, [showLogin, isLoggedIn]);
@@ -31,13 +29,13 @@ const App = () => {
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-[#d4af37] selection:text-black antialiased">
       
-      {/* 1. LANDING PAGE CONTENT */}
+      {/* LANDING PAGE CONTENT */}
       <div className={`${(showLogin || isLoggedIn) ? 'blur-md brightness-50' : ''} transition-all duration-500`}>
-        {/* Background Glow */}
+        {/* Glow Background */}
         <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[600px] pointer-events-none opacity-20"
              style={{ background: 'radial-gradient(circle at 50% 0%, #d4af37 0%, transparent 70%)' }}></div>
 
-        {/* Navigation */}
+        {/* Top Nav */}
         <nav className="fixed top-0 w-full z-40 border-b border-white/5 bg-black/80 backdrop-blur-md px-6 py-6">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
             <div className="text-2xl font-black italic tracking-tighter uppercase">
@@ -52,7 +50,7 @@ const App = () => {
           </div>
         </nav>
 
-        {/* Hero Section */}
+        {/* Hero */}
         <header className="pt-52 pb-24 px-6 text-center">
           <div className="inline-block border border-[#d4af37]/30 bg-[#d4af37]/5 px-5 py-1.5 rounded-full mb-10">
             <span className="text-[10px] font-bold text-[#d4af37] tracking-[0.3em] uppercase">Sovereign Protocol v2.4</span>
@@ -65,60 +63,63 @@ const App = () => {
             Erbaue ein unantastbares Business-Imperium mit maximaler Hebelwirkung und technischer Dominanz.
           </p>
           <button 
-            onClick={() => {
-                const el = document.getElementById('plans');
-                el?.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onClick={() => document.getElementById('plans').scrollIntoView({ behavior: 'smooth' })}
             className="bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-black px-14 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl shadow-[#d4af37]/20 hover:scale-105 transition-all"
           >
             System Protokoll öffnen
           </button>
         </header>
 
-        {/* Pricing Grid */}
-        <section id="plans" className="max-w-7xl mx-auto px-6 py-32 grid md:grid-cols-2 gap-10">
-          {/* Elite Access */}
-          <div className="bg-[#0a0a0a] border border-white/5 p-12 rounded-[40px] hover:border-[#d4af37]/30 transition-all group">
-            <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-2">Stufe I</p>
-            <h3 className="text-4xl font-black italic uppercase mb-6 group-hover:text-white transition-colors text-gray-200">Elite Access</h3>
-            <div className="text-5xl font-black mb-10">2.997 € <span className="text-sm font-normal text-gray-500 tracking-normal">+ MwSt.</span></div>
+        {/* PRICING SECTION - FIXED BUTTONS VISIBILITY */}
+        <section id="plans" className="max-w-7xl mx-auto px-6 py-32 grid md:grid-cols-2 gap-10 items-stretch">
+          
+          {/* Elite Access Card */}
+          <div className="bg-[#0a0a0a] border border-white/5 p-10 rounded-[40px] hover:border-[#d4af37]/30 transition-all group flex flex-col h-full">
+            <div className="mb-8">
+              <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-2">Stufe I</p>
+              <h3 className="text-4xl font-black italic uppercase mb-4 text-gray-200">Elite Access</h3>
+              <div className="text-5xl font-black">2.997 € <span className="text-sm font-normal text-gray-500 tracking-normal">+ MwSt.</span></div>
+            </div>
             
-            <ul className="space-y-5 mb-14">
+            <ul className="space-y-5 mb-12 flex-grow">
               {['White-Label SaaS Master-Lizenz', 'Core Protocol Infrastructure', 'Premium Landing Page Assets', 'Strategischer Support Blueprint'].map(t => (
-                <li key={t} className="flex items-start gap-4 text-gray-400 font-bold text-base">
-                  <div className="mt-1"><CheckIcon /></div> {t}
+                <li key={t} className="flex items-start gap-4 text-gray-400 font-bold text-base leading-tight">
+                  <div className="mt-1 flex-shrink-0"><CheckIcon /></div> {t}
                 </li>
               ))}
             </ul>
             
             <button 
                 onClick={() => window.open('https://www.digistore24.com/product/676462?vendor=sooonic008', '_blank')}
-                className="w-full py-5 border border-white/10 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-white/5 transition-all"
+                className="w-full py-5 bg-white/5 border border-white/10 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-[#d4af37] hover:text-black hover:border-[#d4af37] transition-all duration-300"
             >
-              Plan wählen
+              Elite Plan wählen
             </button>
           </div>
 
-          {/* Gott-Modus */}
-          <div className="bg-[#0a0a0a] border-2 border-[#d4af37] p-12 rounded-[40px] relative shadow-2xl shadow-[#d4af37]/5 flex flex-col">
-            <div className="absolute -top-4 right-10 bg-[#d4af37] text-black px-5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter">
+          {/* Gott-Modus Card */}
+          <div className="bg-[#0a0a0a] border-2 border-[#d4af37] p-10 rounded-[40px] relative shadow-2xl shadow-[#d4af37]/10 flex flex-col h-full">
+            <div className="absolute -top-4 right-10 bg-[#d4af37] text-black px-5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter z-10">
               Maximaler Impact
             </div>
-            <p className="text-[11px] font-bold text-[#d4af37] uppercase tracking-widest mb-2">Stufe II</p>
-            <h3 className="text-4xl font-black italic uppercase mb-6 text-white">Gott-Modus</h3>
-            <div className="text-5xl font-black mb-10">5.997 € <span className="text-sm font-normal text-gray-400 tracking-normal">+ MwSt.</span></div>
             
-            <ul className="space-y-5 mb-14 flex-grow">
+            <div className="mb-8">
+              <p className="text-[11px] font-bold text-[#d4af37] uppercase tracking-widest mb-2">Stufe II</p>
+              <h3 className="text-4xl font-black italic uppercase mb-4 text-white">Gott-Modus</h3>
+              <div className="text-5xl font-black text-[#d4af37]">5.997 € <span className="text-sm font-normal text-gray-400 tracking-normal text-white">+ MwSt.</span></div>
+            </div>
+            
+            <ul className="space-y-5 mb-12 flex-grow">
               {['Full Tech-Setup durch Experten (DFY)', 'Shadow VSL & Sales-Asset Integration', 'Custom Funnel Architecture Tuning', 'Lifetime Strategic Partnership'].map(t => (
-                <li key={t} className="flex items-start gap-4 text-white font-bold text-base">
-                  <div className="mt-1"><StarIcon /></div> {t}
+                <li key={t} className="flex items-start gap-4 text-white font-bold text-base leading-tight">
+                  <div className="mt-1 flex-shrink-0"><StarIcon /></div> {t}
                 </li>
               ))}
             </ul>
             
             <button 
                 onClick={() => window.open('https://www.digistore24.com/product/676464?vendor=sooonic008', '_blank')}
-                className="w-full py-5 bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-black rounded-2xl text-[11px] font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-xl"
+                className="w-full py-5 bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-black rounded-2xl text-[11px] font-black uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-xl"
             >
               Dominanz Sichern
             </button>
@@ -130,17 +131,15 @@ const App = () => {
         </footer>
       </div>
 
-      {/* 2. LOGIN OVERLAY (MODAL) */}
+      {/* LOGIN OVERLAY */}
       {showLogin && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="w-full max-w-sm bg-[#0d0d0d] border border-white/10 rounded-[40px] p-10 relative shadow-2xl shadow-black">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+          <div className="w-full max-w-sm bg-[#0d0d0d] border border-white/10 rounded-[40px] p-10 relative shadow-2xl">
             <div className="absolute top-0 left-0 w-full h-1 bg-[#d4af37]"></div>
-            
             <div className="text-center mb-10">
               <h2 className="text-3xl font-black italic text-white uppercase tracking-tighter">Founder Login</h2>
-              <p className="text-gray-500 text-[10px] mt-2 uppercase tracking-[0.2em]">Authentifizierung erforderlich</p>
+              <p className="text-gray-500 text-[10px] mt-2 uppercase tracking-[0.2em]">Authentifizierung</p>
             </div>
-
             <form onSubmit={handleLoginSubmit} className="space-y-5">
               <input 
                 type="password"
@@ -150,59 +149,31 @@ const App = () => {
                 placeholder="••••••"
                 autoFocus
               />
-              <button className="w-full bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-black font-black py-5 rounded-2xl uppercase text-[10px] tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-[#d4af37]/10">
-                Identität Bestätigen
+              <button className="w-full bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-black font-black py-5 rounded-2xl uppercase text-[10px] tracking-widest">
+                Login
               </button>
             </form>
-
-            {error && <p className="text-red-500 text-[10px] font-black text-center mt-5 uppercase tracking-widest animate-pulse">{error}</p>}
-            
-            <button 
-              onClick={() => { setShowLogin(false); setPin(''); setError(''); }}
-              className="w-full text-gray-700 hover:text-gray-400 text-[9px] mt-8 font-black uppercase tracking-[0.3em] transition-colors"
-            >
+            <button onClick={() => setShowLogin(false)} className="w-full text-gray-700 text-[9px] mt-8 font-black uppercase tracking-[0.3em]">
               Abbrechen
             </button>
           </div>
         </div>
       )}
 
-      {/* 3. DASHBOARD VIEW (FULL SCREEN OVERLAY) */}
+      {/* DASHBOARD OVERLAY */}
       {isLoggedIn && (
-        <div className="fixed inset-0 z-[200] bg-[#050505] animate-in zoom-in-95 duration-500 overflow-y-auto">
-          <div className="min-h-screen p-6 md:p-12 flex flex-col items-center justify-center">
+        <div className="fixed inset-0 z-[200] bg-[#050505] overflow-y-auto">
+          <div className="min-h-screen p-6 flex items-center justify-center">
             <div className="w-full max-w-4xl bg-[#0a0a0a] border border-[#d4af37]/30 rounded-[40px] overflow-hidden shadow-2xl">
               <div className="bg-black/80 p-6 border-b border-white/5 flex justify-between items-center px-10">
-                <div className="flex gap-3 items-center text-[#d4af37]">
-                  <LockIcon />
-                  <span className="text-[10px] font-black tracking-[0.3em] uppercase">Sovereign OS // Admin Access</span>
-                </div>
-                <button 
-                  onClick={() => setIsLoggedIn(false)}
-                  className="text-red-500 text-[10px] font-black uppercase tracking-widest hover:brightness-150 transition-all border border-red-500/20 px-4 py-2 rounded-lg"
-                >
-                  Logout
-                </button>
+                <span className="text-[10px] font-black tracking-[0.3em] uppercase text-[#d4af37]">Sovereign OS // Admin</span>
+                <button onClick={() => setIsLoggedIn(false)} className="text-red-500 text-[10px] font-black uppercase tracking-widest">Logout</button>
               </div>
-              
               <div className="p-12 md:p-20 text-center">
                 <h2 className="text-4xl md:text-5xl font-black italic text-white mb-8 uppercase tracking-tighter">Willkommen, <span className="text-[#d4af37]">Founder</span></h2>
-                
-                <div className="grid md:grid-cols-2 gap-6 text-left max-w-2xl mx-auto">
-                    <div className="bg-black/50 p-6 rounded-3xl border border-white/5">
-                        <p className="text-[9px] text-gray-600 font-bold uppercase mb-2">Protokoll Status</p>
-                        <p className="text-green-500 font-mono text-sm tracking-tighter font-bold">ACTIVE_ENCRYPTED</p>
-                    </div>
-                    <div className="bg-black/50 p-6 rounded-3xl border border-white/5">
-                        <p className="text-[9px] text-gray-600 font-bold uppercase mb-2">Master Lizenz</p>
-                        <p className="text-[#d4af37] font-mono text-sm tracking-tighter font-bold">VERIFIED_V2.4</p>
-                    </div>
-                </div>
-
                 <div className="mt-12 p-8 bg-black rounded-3xl border border-white/5 text-left max-w-2xl mx-auto font-mono text-[11px] space-y-2 opacity-60">
                     <p className="text-green-500">{`> initializing sovereign_kernel...`}</p>
-                    <p className="text-white">{`> establishing multi-cloud failover [AWS/HETZNER]`}</p>
-                    <p className="text-white">{`> syncing local_ai_nodes... done.`}</p>
+                    <p className="text-white">{`> establishing multi-cloud failover`}</p>
                     <p className="text-[#d4af37] animate-pulse">{`> awaiting founder instructions_`}</p>
                 </div>
               </div>
